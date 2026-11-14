@@ -85,7 +85,7 @@ export function legalScreen(kind: 'privacy' | 'terms'): Screen {
 
       return (
         <article className="mx-auto max-w-3xl px-4 py-14">
-          <h1 className="font-display text-3xl font-semibold">{messages.pages[kind]}</h1>
+          <h1 className="font-display text-3xl font-extrabold tracking-tight">{messages.pages[kind]}</h1>
           <p className="mt-3 text-sm text-ink-muted">{messages.legal.updated}</p>
           {messages.legal[kind].map((block) => (
             <section key={block.heading} className="mt-8 space-y-2">
@@ -116,7 +116,7 @@ export const contact: Screen = {
     return (
       <div className="mx-auto grid max-w-6xl gap-12 px-4 py-14 md:grid-cols-2">
         <div className="space-y-4">
-          <h1 className="font-display text-4xl font-semibold">{t.title}</h1>
+          <h1 className="font-display text-4xl font-extrabold tracking-tight">{t.title}</h1>
           <p className="text-ink-muted">{t.intro}</p>
         </div>
 
@@ -172,7 +172,7 @@ export const serviceDetail: Screen<{ slug: string }> = {
         <Link href={localePath(locale, '/services')} className="text-brand-700 hover:underline">
           <span aria-hidden="true">←</span> {messages.pages.back}
         </Link>
-        <h1 className="mt-4 font-display text-4xl font-semibold">{service.title}</h1>
+        <h1 className="mt-4 font-display text-4xl font-extrabold tracking-tight">{service.title}</h1>
         <div className={`mt-8 grid items-start gap-8 ${service.image ? 'md:grid-cols-2' : ''}`}>
           {service.image && <Img image={service.image} alt={service.title} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[4/3] w-full rounded-lg object-cover" />}
           {service.description && <p className="text-lg whitespace-pre-line text-ink-muted">{service.description}</p>}

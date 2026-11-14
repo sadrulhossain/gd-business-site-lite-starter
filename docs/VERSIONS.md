@@ -1,6 +1,6 @@
 # Versions
 
-Rebuilt from the template's docs/VERSIONS.md (2026-11-11/13 checks). Pin = what we build against. Floor = minimum safe version (never go below).
+Rebuilt from the template's docs/VERSIONS.md; floors re-verified 2026-11-14 (phase L7: pnpm audit clean, Trivy clean, npm latest compared). Pin = what we build against. Floor = minimum safe version (never go below).
 Dependencies not listed here must not be added (CLAUDE.md rule 2).
 
 | Component | Pin | Floor | Source | Date | Docker Hub |
@@ -19,6 +19,8 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 | @playwright/test | 1.65.0 | 1.65.0 | https://www.npmjs.com/package/@playwright/test/v/1.65.0 | 2026-11-13 | image `mcr.microsoft.com/playwright:v1.65.0-noble` (must match) |
 | @axe-core/playwright | 4.14.0 | 4.14.0 | https://www.npmjs.com/package/@axe-core/playwright/v/4.14.0 | 2026-11-13 | n/a (npm) |
 | sharp | 0.35.5 | 0.35.5 | https://www.npmjs.com/package/sharp/v/0.35.5 | 2026-11-14 | n/a (npm) |
+| Trivy | 0.76.2 | 0.76.2 | https://github.com/aquasecurity/trivy/releases/tag/v0.76.2 | 2026-11-14 | `aquasec/trivy:0.76.2` (tool run by make scan, not a dependency) |
+| Lighthouse | 13.6.0 | 13.6.0 | https://www.npmjs.com/package/lighthouse/v/13.6.0 | 2026-11-14 | n/a (npx inside the e2e container, make lighthouse; not a dependency) |
 | Zod | 4.6.7 | 4.6.7 | https://www.npmjs.com/package/zod/v/4.6.7 | 2026-11-14 | n/a (npm) |
 
 ## Notes
@@ -26,4 +28,5 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 - Node: 24.22.3 is the patched 24.x line (November 2026 security release). The official image may lag; do not build from an older 24.x as the pin.
 - Next.js: 16.4.6 is kept as in the template (bumped from 16.4.5 on 2026-11-12, a recorded user decision, and the floor).
 - sharp and Zod: newest versions on npm at 2026-11-14; floors equal pins and advisories were not checked yet (L7 re-verifies). Zod is installed (L3); sharp is installed (L6, image pipeline).
-- Tools run on demand, not dependencies: Lighthouse via `npx`.
+- Phase L7 (2026-11-14): `pnpm audit` (production and dev) found nothing; Trivy (HIGH/CRITICAL) on the node and nginx images found 3 libxslt issues in nginx and 6 bundled-npm issues (undici, brace-expansion) in node. docker/nginx/Dockerfile runs `apk upgrade` and docker/node/Dockerfile removes the unused bundled npm; both images now scan clean. Newer patch releases exist for postcss (8.5.33) and @playwright/test (1.65.1, must match the Playwright image); pins stay until a floor requires them. TypeScript stays on 5.9.3 on purpose (7.x is the native compiler without the JS API Next uses).
+- Tools run on demand, not dependencies: Trivy (`make scan`) and Lighthouse (`make lighthouse`). GitHub Actions use actions/checkout, setup-node and upload-artifact at major version 4.
