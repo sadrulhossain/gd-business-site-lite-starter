@@ -1,4 +1,5 @@
 import type { Media } from '../lib/content'
+import { withBase } from '../lib/base'
 
 interface ImgProps {
   image: Media
@@ -18,13 +19,13 @@ interface ImgProps {
  */
 export function Img({ image, alt = '', className, sizes = '(min-width: 768px) 33vw, 100vw', priority = false }: ImgProps) {
   const srcSet = Object.entries(image.webp)
-    .map(([width, url]) => `${url} ${width}w`)
+    .map(([width, url]) => `${withBase(url)} ${width}w`)
     .join(', ')
 
   return (
     // eslint-disable-next-line @next/next/no-img-element -- see above: next/image cannot be used in a static export.
     <img
-      src={image.url}
+      src={withBase(image.url)}
       srcSet={srcSet || undefined}
       sizes={srcSet ? sizes : undefined}
       width={image.width}

@@ -43,14 +43,14 @@ jobs:
           path: out
           include-hidden-files: true
           if-no-files-found: error
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: out
 
+  # GitHub Pages is built again here: a project site lives under /<repo-name>/, so it needs BASE_PATH (configure-pages reports it;
+  # it is empty on a custom domain or a user site).
   github-pages:
     needs: build
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
@@ -60,6 +60,29 @@ jobs:
       - name: Not configured
         if: ${{ vars.DEPLOY_GITHUB_PAGES != 'true' }}
         run: echo "::notice::GitHub Pages is off (set the repository variable DEPLOY_GITHUB_PAGES to true to enable it)."
+      - if: ${{ vars.DEPLOY_GITHUB_PAGES == 'true' }}
+        uses: actions/checkout@v4
+      - if: ${{ vars.DEPLOY_GITHUB_PAGES == 'true' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.3
+      - if: ${{ vars.DEPLOY_GITHUB_PAGES == 'true' }}
+        run: corepack enable && pnpm install --frozen-lockfile
+      - id: pages
+        if: ${{ vars.DEPLOY_GITHUB_PAGES == 'true' }}
+        uses: actions/configure-pages@v5
+      - name: Static export with the Pages base path
+        if: ${{ vars.DEPLOY_GITHUB_PAGES == 'true' }}
+        env:
+          LOCALE_DEFAULT: ${{ vars.LOCALE_DEFAULT || 'en' }}
+          LOCALE_SUPPORTED: ${{ vars.LOCALE_SUPPORTED || 'en,bn' }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          SITE_URL: ${{ vars.SITE_URL || format('{0}{1}', steps.pages.outputs.origin, steps.pages.outputs.base_path) }}
+        run: STATIC_EXPORT=1 pnpm build && test -f out/index.html && touch out/.nojekyll
+      - if: ${{ vars.DEPLOY_GITHUB_PAGES == 'true' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
       - id: deployment
         if: ${{ vars.DEPLOY_GITHUB_PAGES == 'true' }}
         uses: actions/deploy-pages@v4
