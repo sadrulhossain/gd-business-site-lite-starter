@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import type { GalleryItem } from '../lib/content'
-import { Picture } from './Media'
+import { Img } from './Img'
 
 /**
  * Gallery grid with a native <dialog> lightbox: a thumbnail opens the picture larger (Esc, the close button or a click
@@ -25,7 +25,7 @@ export function GalleryGrid({ items, labels }: { items: GalleryItem[]; labels: {
             <figure>
               {g.image && (
                 <button type="button" onClick={() => open(g)} aria-label={`${labels.open}: ${g.title ?? g.caption ?? ''}`.replace(/: $/, '')} aria-haspopup="dialog" className="block w-full cursor-zoom-in">
-                  <Picture image={g.image} alt={g.title ?? g.caption ?? ''} className="aspect-square w-full rounded-md object-cover" />
+                  <Img image={g.image} alt={g.title ?? g.caption ?? ''} className="aspect-square w-full rounded-md object-cover" />
                 </button>
               )}
               {g.caption && <figcaption className="mt-1 text-sm text-ink-muted">{g.caption}</figcaption>}
@@ -45,7 +45,7 @@ export function GalleryGrid({ items, labels }: { items: GalleryItem[]; labels: {
       >
         {active?.image && (
           <figure className="space-y-2">
-            <Picture image={active.image} alt={active.title ?? active.caption ?? ''} sizes="90vw" className="max-h-[70vh] w-full rounded-md object-contain" />
+            <Img image={active.image} alt={active.title ?? active.caption ?? ''} sizes="90vw" className="max-h-[70vh] w-full rounded-md object-contain" />
             {active.caption && <figcaption className="text-ink-muted">{active.caption}</figcaption>}
           </figure>
         )}

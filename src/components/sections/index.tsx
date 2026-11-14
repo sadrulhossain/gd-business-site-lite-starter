@@ -4,7 +4,7 @@ import { getContent, type Section, type Settings } from '../../lib/content'
 import { contactMethods } from '../../lib/contact'
 import { localePath, type Messages } from '../../lib/i18n'
 import { GalleryGrid } from '../GalleryGrid'
-import { Picture } from '../Media'
+import { Img } from '../Img'
 
 interface Ctx {
   locale: string
@@ -43,7 +43,7 @@ const Hero: SectionView = ({ section }) => (
         </h1>
         {section.content && <p className="max-w-xl text-lg whitespace-pre-line text-ink-muted">{section.content}</p>}
       </div>
-      {section.image && <Picture image={section.image} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[4/3] w-full rounded-lg object-cover" />}
+      {section.image && <Img image={section.image} priority sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[4/3] w-full rounded-lg object-cover" />}
     </div>
   </section>
 )
@@ -60,7 +60,7 @@ const About: SectionView = ({ section, page }) => {
         </Heading>
         {section.content && <p className="whitespace-pre-line text-ink-muted">{section.content}</p>}
       </div>
-      {section.image && <Picture image={section.image} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[4/3] w-full rounded-lg object-cover" />}
+      {section.image && <Img image={section.image} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[4/3] w-full rounded-lg object-cover" />}
     </div>
   </section>
   )
@@ -77,7 +77,7 @@ const Services: SectionView = async ({ section, locale, messages, page }) => {
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((s) => (
             <li key={s.id} className={`${card} space-y-2`}>
-              {s.image && <Picture image={s.image} className="mb-3 aspect-[3/2] w-full rounded-sm object-cover" />}
+              {s.image && <Img image={s.image} className="mb-3 aspect-[3/2] w-full rounded-sm object-cover" />}
               <h3 className="text-lg font-semibold">
                 <Link href={localePath(locale, `/services/${s.slug}`)} className="hover:text-brand-700 hover:underline">
                   {s.title}
@@ -164,7 +164,7 @@ const Team: SectionView = async ({ section, locale, messages, page }) => {
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((m) => (
             <li key={m.id} className={`${card} space-y-1`}>
-              {m.image && <Picture image={m.image} sizes="(min-width: 1024px) 25vw, 50vw" className="mb-3 aspect-square w-full rounded-sm object-cover" />}
+              {m.image && <Img image={m.image} sizes="(min-width: 1024px) 25vw, 50vw" className="mb-3 aspect-square w-full rounded-sm object-cover" />}
               <h3 className="font-semibold">{m.name}</h3>
               <p className="text-brand-700">{m.role}</p>
               {m.bio && <p className="text-sm whitespace-pre-line text-ink-muted">{m.bio}</p>}
@@ -203,7 +203,7 @@ const Contact: SectionView = ({ section, settings, messages, page }) => {
 
 /** A section without a dedicated view still renders: title, text and image. */
 const Generic: SectionView = ({ section, page }) => (
-  <Frame section={section} page={page}>{section.image && <Picture image={section.image} sizes="(min-width: 768px) 50vw, 100vw" className="max-w-xl rounded-md" />}</Frame>
+  <Frame section={section} page={page}>{section.image && <Img image={section.image} sizes="(min-width: 768px) 50vw, 100vw" className="max-w-xl rounded-md" />}</Frame>
 )
 
 const views: Record<string, SectionView> = {

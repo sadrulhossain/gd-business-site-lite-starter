@@ -18,12 +18,12 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 | @types/node | 24.19.2 | 24.19.2 | https://www.npmjs.com/package/@types/node/v/24.19.2 | 2026-11-12 | n/a (npm; 24.x line to match Node 24) |
 | @playwright/test | 1.65.0 | 1.65.0 | https://www.npmjs.com/package/@playwright/test/v/1.65.0 | 2026-11-13 | image `mcr.microsoft.com/playwright:v1.65.0-noble` (must match) |
 | @axe-core/playwright | 4.14.0 | 4.14.0 | https://www.npmjs.com/package/@axe-core/playwright/v/4.14.0 | 2026-11-13 | n/a (npm) |
-| sharp | 0.35.5 | 0.35.5 | https://www.npmjs.com/package/sharp/v/0.35.5 | 2026-11-14 | n/a (npm; not installed yet) |
+| sharp | 0.35.5 | 0.35.5 | https://www.npmjs.com/package/sharp/v/0.35.5 | 2026-11-14 | n/a (npm) |
 | Zod | 4.6.7 | 4.6.7 | https://www.npmjs.com/package/zod/v/4.6.7 | 2026-11-14 | n/a (npm) |
 
 ## Notes
 - Dropped from the template: PHP, Laravel, Composer, MariaDB, Redis, Mailpit, Vite, TipTap and all PHP packages.
 - Node: 24.22.3 is the patched 24.x line (November 2026 security release). The official image may lag; do not build from an older 24.x as the pin.
 - Next.js: 16.4.6 is kept as in the template (bumped from 16.4.5 on 2026-11-12, a recorded user decision, and the floor).
-- sharp and Zod: newest versions on npm at 2026-11-14; floors equal pins and advisories were not checked yet (L7 re-verifies). Zod is installed (L3); sharp is installed when L6 first uses it.
+- sharp and Zod: newest versions on npm at 2026-11-14; floors equal pins and advisories were not checked yet (L7 re-verifies). Zod is installed (L3); sharp is installed (L6, image pipeline).
 - Tools run on demand, not dependencies: Lighthouse via `npx`.

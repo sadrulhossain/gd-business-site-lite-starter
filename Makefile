@@ -26,7 +26,7 @@ down:
 	@$(call quiet,$(COMPOSE) --profile build --profile preview down --remove-orphans)
 	@echo "stack down"
 
-# static export into ./out
+# images (scripts/images.js) and static export into ./out; the pipeline runs inside pnpm build
 build: env
 	@$(call quiet,$(COMPOSE) run --rm --no-deps build)
 	@tail -n 1 $(LOG)
