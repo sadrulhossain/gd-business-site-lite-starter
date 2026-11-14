@@ -34,7 +34,10 @@
     "call": "Call",
     "email": "Email",
     "visit": "Visit",
-    "details": "Details"
+    "details": "Details",
+    "whatsapp": "WhatsApp",
+    "close": "Close",
+    "open": "View larger image"
   },
   "pages": {
     "about": "About us",
