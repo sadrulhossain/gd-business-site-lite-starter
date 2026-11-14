@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { getContent } from '../lib/content'
+import { withBase } from '../lib/base'
 import { getMessages } from '../lib/i18n'
 import { siteUrl } from '../lib/seo'
 import { Footer } from './Footer'
@@ -17,7 +18,7 @@ export function siteMetadata(locale: string): Metadata {
     description: settings.seo.description,
     openGraph: settings.seo.og_image ? { images: [{ url: settings.seo.og_image }] } : undefined,
     metadataBase: new URL(siteUrl()),
-    icons: { icon: '/icon.svg' },
+    icons: { icon: withBase('/icon.svg') },
   }
 }
 

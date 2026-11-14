@@ -5,8 +5,13 @@
 const supported = (process.env.LOCALE_SUPPORTED ?? 'en').split(',').map((code) => code.trim()).filter(Boolean)
 const second = supported.find((code) => code !== (process.env.LOCALE_DEFAULT ?? 'en'))
 
+// BASE_PATH: the site is served from a sub-path, e.g. /repo-name on a GitHub Pages project site. Empty (the default) at a domain root.
+const basePath = (process.env.BASE_PATH ?? '').replace(/\/+$/, '')
+
 export default {
   output: 'export',
+  basePath: basePath || undefined,
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
   trailingSlash: true,
   images: { unoptimized: true },
   distDir: process.env.STATIC_EXPORT === '1' ? 'out' : '.next',

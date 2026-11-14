@@ -28,12 +28,12 @@ A target that is not configured is not an error: its job runs, prints a notice a
 
 | Target | Switch on |
 |--------|-----------|
-| GitHub Pages | variable `DEPLOY_GITHUB_PAGES=true`, and Settings > Pages > Source: GitHub Actions. Needs a custom domain or a user site: the site uses root-relative paths, so a project URL (`/repo-name/`) will not load its CSS or images |
+| GitHub Pages | variable `DEPLOY_GITHUB_PAGES=true`, and Settings > Pages > Source: GitHub Actions. The workflow builds this target separately with the right base path: a project site is served from `/<repo-name>/`, a custom domain or user site from `/` |
 | Cloudflare Pages | secrets `CLOUDFLARE_API_TOKEN` (Pages: Edit) and `CLOUDFLARE_ACCOUNT_ID`, variable `CLOUDFLARE_PROJECT` |
 | Netlify | secrets `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` |
 
 Set the variable `SITE_URL` to the live address (canonical URLs, sitemap, no trailing slash) and, if different from the defaults `en` and `en,bn`,
-`LOCALE_DEFAULT` and `LOCALE_SUPPORTED`. A real deploy failure (bad token, Pages not enabled) still fails the run, on purpose.
+`LOCALE_DEFAULT` and `LOCALE_SUPPORTED`. For a sub-path by hand set `BASE_PATH=/<repo-name>` and `SITE_URL=https://<user>.github.io/<repo-name>` when building (`BASE_PATH` is empty by default). A real deploy failure (bad token, Pages not enabled) still fails the run, on purpose.
 
 ## GitHub release
 Pushing a tag `v*` runs `.github/workflows/release.yml`, which builds the site and attaches `site-<tag>.zip` (the contents of `out/`).
