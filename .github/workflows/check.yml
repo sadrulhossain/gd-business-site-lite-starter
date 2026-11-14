@@ -24,7 +24,7 @@ jobs:
       - name: Data, tests, types
         run: |
           node scripts/validate-data.js
-          node --test scripts/
+          node --test scripts/*.test.js
           pnpm typecheck
           node scripts/check-floors.mjs
       - name: Audit
