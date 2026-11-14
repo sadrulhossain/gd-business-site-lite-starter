@@ -69,10 +69,10 @@ export function Footer({ locale, settings, messages }: { locale: string; setting
             © {new Date().getFullYear()} {settings.site_name}. {messages.footer.rights}
           </p>
           <nav aria-label={messages.footer.legal} className="flex gap-5">
-            <Link href={localePath(locale, '/privacy')} className={link}>
+            <Link prefetch={false} href={localePath(locale, '/privacy')} className={link}>
               {messages.footer.privacy}
             </Link>
-            <Link href={localePath(locale, '/terms')} className={link}>
+            <Link prefetch={false} href={localePath(locale, '/terms')} className={link}>
               {messages.footer.terms}
             </Link>
           </nav>
