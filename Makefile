@@ -49,6 +49,8 @@ versions: env
 check: env
 	@$(call quiet,$(COMPOSE) --profile build --profile preview config -q)
 	@for f in scripts/*.sh docker/*/*.sh; do sh -n $$f || exit 1; done
+	@node scripts/validate-data.js
+	@$(call quiet,node --test scripts/)
 	@$(call quiet,$(COMPOSE) --profile preview run --rm --no-deps nginx nginx -t)
 	@$(MAKE) --no-print-directory versions | tail -n 1
 	@echo "check: ok"

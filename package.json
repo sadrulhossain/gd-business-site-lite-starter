@@ -1,19 +1,23 @@
 {
   "name": "gd-business-site-lite-starter",
   "private": true,
+  "type": "module",
   "packageManager": "pnpm@12.18.0",
   "engines": {
     "node": ">=24"
   },
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0 --port ${LITE_DEV_PORT:-28310}",
-    "build": "next build",
+    "validate": "node scripts/validate-data.js",
+    "test:data": "node --test scripts/",
+    "build": "node scripts/validate-data.js && next build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "next": "16.4.6",
     "react": "19.3.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

@@ -24,7 +24,7 @@ for (const [key, row] of Object.entries({ NODE_VERSION: /^Node/, NGINX_VERSION: 
 }
 
 const pnpm = existsSync('pnpm-lock.yaml') ? readFileSync('pnpm-lock.yaml', 'utf8') : ''
-const js = { next: /^Next/, react: /^React/, 'react-dom': /^React/, tailwindcss: /^tailwindcss$/, postcss: /^postcss$/, typescript: /^typescript$/ }
+const js = { next: /^Next/, react: /^React/, 'react-dom': /^React/, tailwindcss: /^tailwindcss$/, postcss: /^postcss$/, typescript: /^typescript$/, zod: /^Zod$/ }
 const installed = new Map()
 for (const line of pnpm.split(/\r?\n/)) {
   const m = /^ {2}'?(.+?)@(\d+\.\d+\.\d+)'?:$/.exec(line)
