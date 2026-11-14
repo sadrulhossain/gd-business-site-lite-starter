@@ -4,7 +4,7 @@ set -eu
 cd /app
 corepack enable
 pnpm install --frozen-lockfile --reporter=silent
-rm -rf out .next-build
+rm -rf out
 pnpm run build
 test -f out/index.html
 echo "export ok: out/"

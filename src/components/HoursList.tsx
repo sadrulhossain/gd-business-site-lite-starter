@@ -1,4 +1,4 @@
-import type { Settings } from '../lib/api'
+import type { Settings } from '../lib/content'
 import type { Messages } from '../lib/i18n'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const

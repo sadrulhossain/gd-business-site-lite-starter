@@ -1,4 +1,4 @@
-import type { Settings } from '../lib/api'
+import type { Settings } from '../lib/content'
 import Link from 'next/link'
 import { localePath, type Messages } from '../lib/i18n'
 import { HoursList } from './HoursList'

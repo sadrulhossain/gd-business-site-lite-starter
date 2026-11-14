@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { getList, type Faq, type GalleryItem, type Section, type Service, type Settings, type TeamMember, type Testimonial } from '../../lib/api'
+import { getContent, type Section, type Settings } from '../../lib/content'
 import { localePath, type Messages } from '../../lib/i18n'
 import { Picture } from '../Media'
 
@@ -65,7 +65,7 @@ const About: SectionView = ({ section, page }) => {
 }
 
 const Services: SectionView = async ({ section, locale, messages, page }) => {
-  const items = await getList<Service>(locale, 'services')
+  const items = getContent(locale).services
 
   return (
     <Frame section={section} page={page}>
@@ -91,7 +91,7 @@ const Services: SectionView = async ({ section, locale, messages, page }) => {
 }
 
 const Testimonials: SectionView = async ({ section, locale, messages, page }) => {
-  const items = await getList<Testimonial>(locale, 'testimonials')
+  const items = getContent(locale).testimonials
 
   return (
     <Frame section={section} page={page}>
@@ -117,7 +117,7 @@ const Testimonials: SectionView = async ({ section, locale, messages, page }) =>
 }
 
 const Gallery: SectionView = async ({ section, locale, messages, page }) => {
-  const items = await getList<GalleryItem>(locale, 'gallery')
+  const items = getContent(locale).gallery
 
   return (
     <Frame section={section} page={page}>
@@ -140,7 +140,7 @@ const Gallery: SectionView = async ({ section, locale, messages, page }) => {
 }
 
 const Faqs: SectionView = async ({ section, locale, messages, page }) => {
-  const items = await getList<Faq>(locale, 'faqs')
+  const items = getContent(locale).faqs
 
   return (
     <Frame section={section} page={page}>
@@ -161,7 +161,7 @@ const Faqs: SectionView = async ({ section, locale, messages, page }) => {
 }
 
 const Team: SectionView = async ({ section, locale, messages, page }) => {
-  const items = await getList<TeamMember>(locale, 'team')
+  const items = getContent(locale).team
 
   return (
     <Frame section={section} page={page}>

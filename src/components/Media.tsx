@@ -1,4 +1,4 @@
-import type { Media } from '../lib/api'
+import type { Media } from '../lib/content'
 
 /** An upload with its generated WebP widths as srcset. Alt is empty unless given: these are decorative by default. */
 export function Picture({ image, alt = '', className, sizes = '(min-width: 768px) 33vw, 100vw' }: { image: Media; alt?: string; className?: string; sizes?: string }) {

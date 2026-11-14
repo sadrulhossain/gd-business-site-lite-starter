@@ -2,9 +2,8 @@ import en from '../messages/en.json'
 import second from '../messages/second.json'
 
 /**
- * Locales come from the same env as the API (LOCALE_DEFAULT, LOCALE_SUPPORTED). The default locale has no URL prefix;
- * the second one (first supported code that is not the default) lives at /<code>. Only two languages are modelled,
- * matching the API's x / x_2nd columns.
+ * Locales come from env at build time (LOCALE_DEFAULT, LOCALE_SUPPORTED). The default locale has no URL prefix;
+ * the second one (first supported code that is not the default) lives at /<code>/. Only two languages are modelled.
  */
 const supported = (process.env.LOCALE_SUPPORTED ?? 'en').split(',').map((s) => s.trim()).filter(Boolean)
 
@@ -41,16 +40,16 @@ export function fill(text: string, values: Record<string, string | null | undefi
   return text.replace(/{(w+)}/g, (_, key: string) => values[key] ?? '')
 }
 
-/** Browser-facing path of `path` ("/", "/blog") in `locale`. `fallback` is the unprefixed locale (the server's default). */
+/** Browser-facing path of `path` ("/", "/about") in `locale`, always with a trailing slash (trailingSlash: true). `unprefixed` is the default locale. */
 export function localePath(locale: string, path = '/', unprefixed = defaultLocale): string {
-  if (locale === unprefixed) return path
+  const clean = path.replace(/\/+$/, '')
 
-  return path === '/' ? `/${locale}` : `/${locale}${path}`
+  return `${locale === unprefixed ? clean : `/${locale}${clean}`}/`
 }
 
 /**
- * Removes a leading locale prefix from a browser pathname: "/bn/blog" -> "/blog", "/bn" -> "/".
- * Client components get `all` and `unprefixed` as props because the env vars exist only on the server.
+ * Removes a leading locale prefix from a browser pathname: "/bn/about/" -> "/about/", "/bn/" -> "/".
+ * Client components get `all` and `unprefixed` as props because the env vars exist only at build time.
  */
 export function stripLocale(pathname: string, all: string[] = locales, unprefixed = defaultLocale): string {
   for (const code of all) {

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import type { Post, Settings } from './api'
+import type { Settings } from './content'
 import { defaultLocale, localePath, locales } from './i18n'
 
 /** Public origin of the portal, for canonical URLs, Open Graph, the sitemap and JSON-LD. Set SITE_URL in production. */
@@ -9,7 +9,7 @@ export function siteUrl(): string {
 
 export const absolute = (path: string): string => `${siteUrl()}${path}`
 
-/** Canonical plus one hreflang per locale (and x-default) for the same page. Paths are unprefixed ("/blog"). */
+/** Canonical plus one hreflang per locale (and x-default) for the same page. Paths are unprefixed ("/about"). */
 export function alternates(locale: string, path: string): NonNullable<Metadata['alternates']> {
   return {
     canonical: localePath(locale, path),
@@ -82,27 +82,6 @@ export function localBusinessJsonLd(settings: Settings, locale: string): Record<
     address: settings.address ? { '@type': 'PostalAddress', streetAddress: settings.address } : undefined,
     openingHoursSpecification: opening.length ? opening : undefined,
     sameAs: sameAs.length ? sameAs : undefined,
-  })
-}
-
-/** schema.org Article for a blog post; the publisher is the business. */
-export function articleJsonLd(post: Post, settings: Settings, locale: string): Record<string, unknown> {
-  const url = absolute(localePath(locale, `/blog/${post.slug}`))
-
-  return clean({
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: post.title,
-    description: post.seo_description ?? post.excerpt,
-    image: post.image?.url,
-    datePublished: post.published_at ?? post.updated_at,
-    dateModified: post.updated_at,
-    inLanguage: locale,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-    url,
-    articleSection: post.category?.name,
-    author: { '@type': 'Organization', name: settings.site_name },
-    publisher: { '@type': 'Organization', name: settings.site_name },
   })
 }
 

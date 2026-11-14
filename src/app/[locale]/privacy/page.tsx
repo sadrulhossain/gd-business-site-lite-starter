@@ -1,6 +1,7 @@
-import { legalPage } from '../../../lib/legal-page'
+import { localeRoute } from '../../../lib/routes'
+import { legalScreen } from '../../../lib/screens'
 
-const page = legalPage('privacy')
+const route = localeRoute(legalScreen('privacy'))
 
-export const generateMetadata = page.generateMetadata
-export default page.Page
+export const generateMetadata = route.generateMetadata
+export default route.Page
