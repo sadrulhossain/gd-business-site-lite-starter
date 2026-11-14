@@ -4,7 +4,8 @@ import { z } from 'zod'
 
 const text = z.string().trim().min(1)
 const optionalText = z.string().trim().nullish()
-const imagePath = z.string().regex(/^\/images\/[\w./-]+\.(jpe?g|png|webp|svg)$/i, 'use /images/<file>')
+// A file name in content/images (the originals); scripts/images.js turns it into WebP sizes.
+const imagePath = z.string().regex(/^[\w.-]+\.(jpe?g|png|webp|svg)$/i, 'use a file name from content/images, for example hero.jpg')
 const hhmm = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'use HH:MM')
 
 /** `name` and `name_2nd`: the default-language text and its optional second-language text. */

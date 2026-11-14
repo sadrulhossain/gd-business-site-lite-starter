@@ -1,6 +1,7 @@
 // getContent(locale): the validated content of src/data/*.js, resolved for one locale.
 // Data is parsed once at import time, so invalid data fails the build (scripts/validate-data.js reports it earlier, with paths).
 import { secondLocale } from '../lib/i18n'
+import manifest from '../generated/images.json'
 import { parseContent } from './schema.js'
 import faqs from './faqs.js'
 import gallery from './gallery.js'
@@ -36,8 +37,34 @@ function localize(value, useSecond) {
   return value
 }
 
-/** An image file from the data (`/images/x.jpg`) as the Media the views take; WebP widths come from the image pipeline (L6). */
-const media = (/** @type {string | null} */ path) => (path ? { url: path, webp: {} } : null)
+/**
+ * An image file name from the data (content/images/hero.jpg) as the manifest entry scripts/images.js wrote for it.
+ * Throws, naming the file, when the pipeline has not produced it.
+ * @param {string} name
+ */
+function entry(name) {
+  const found = /** @type {Record<string, { src: string, width: number, height: number, variants: Record<string, string> }>} */ (manifest)[name]
+  if (!found) throw new Error(`Image "${name}" is not in the manifest: add it to content/images and run pnpm images`)
+
+  return found
+}
+
+/** The Media the views take: plain src, WebP widths for srcset and the intrinsic size. */
+const media = (/** @type {string | null} */ name) => {
+  if (!name) return null
+  const { src, width, height, variants } = entry(name)
+
+  return { url: src, webp: variants, width, height }
+}
+
+/** Plain URL of an image for places that take a string (logo, favicon, social card): the widest generated variant. */
+const widest = (/** @type {string | null} */ name) => {
+  if (!name) return null
+  const { src, variants } = entry(name)
+  const widths = Object.keys(variants).map(Number)
+
+  return widths.length ? /** @type {string} */ (variants[String(Math.max(...widths))]) : src
+}
 
 /**
  * @param {string} locale
@@ -50,8 +77,8 @@ export function getContent(locale) {
     settings: {
       site_name: l.settings.site_name,
       tagline: l.settings.tagline ?? null,
-      logo: l.settings.logo,
-      favicon: l.settings.favicon,
+      logo: widest(l.settings.logo),
+      favicon: widest(l.settings.favicon),
       address: l.settings.address ?? null,
       phone: l.settings.phone,
       whatsapp: l.settings.whatsapp,
@@ -59,7 +86,7 @@ export function getContent(locale) {
       hours: l.settings.hours,
       social_links: l.settings.social_links,
       map_url: l.settings.map_url,
-      seo: { title: l.settings.seo.title, description: l.settings.seo.description, og_image: l.settings.seo.og_image },
+      seo: { title: l.settings.seo.title, description: l.settings.seo.description, og_image: widest(l.settings.seo.og_image) },
       contact: l.settings.contact,
     },
     // Visible sections in display order.

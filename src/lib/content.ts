@@ -1,7 +1,11 @@
 /** Types of the content the views consume. The data lives in src/data/*.js; getContent(locale) returns it resolved for one locale. */
 export interface Media {
+  /** Plain `src` (a WebP, up to 960 wide). */
   url: string
+  /** Width -> WebP url, for srcset. Empty for SVG. */
   webp: Record<string, string>
+  width: number
+  height: number
 }
 
 export interface Settings {

@@ -5,7 +5,7 @@ gd-business-site-boilerplate (see docs/SYNC.md).
 
 ## Stack
 - Node 24 (patched tag), Next.js 16 App Router, static export only (`output: export`, no server, no middleware), React 19, Tailwind 4, TypeScript, pnpm (single package, no workspace)
-- Zod validates src/data/*.js (content, x / x_2nd fields); sharp is pinned in docs/VERSIONS.md for phase L6, not installed yet
+- Zod validates src/data/*.js (content, x / x_2nd fields); sharp (scripts/images.js) turns content/images originals into WebP sizes; render pictures only with `src/components/Img.tsx`, never next/image
 - nginx 1.30 preview in front of the dev server; Playwright for browser tests
 
 ## Layout

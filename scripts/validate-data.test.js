@@ -16,6 +16,7 @@ test('a bad fixture fails and names the bad paths', () => {
   assert.equal(result.status, 1)
   assert.match(result.stderr, /settings\.site_name/)
   assert.match(result.stderr, /settings\.email/)
+  assert.match(result.stderr, /settings\.logo: image "missing-logo\.png" not found/)
   assert.match(result.stderr, /sections: duplicate section key/)
   assert.match(result.stderr, /services: missing file services\.js/)
 })

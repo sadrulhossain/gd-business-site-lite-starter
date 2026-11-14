@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import type { ReactElement } from 'react'
 import { HoursList } from '../components/HoursList'
 import { JsonLd } from '../components/JsonLd'
-import { Picture } from '../components/Media'
+import { Img } from '../components/Img'
 import { SectionBlock, SectionRenderer } from '../components/sections'
 import { contactMethods, mapHref } from './contact'
 import { getContent, SECTION_PAGES } from './content'
@@ -174,7 +174,7 @@ export const serviceDetail: Screen<{ slug: string }> = {
         </Link>
         <h1 className="mt-4 font-display text-4xl font-semibold">{service.title}</h1>
         <div className={`mt-8 grid items-start gap-8 ${service.image ? 'md:grid-cols-2' : ''}`}>
-          {service.image && <Picture image={service.image} alt={service.title} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[4/3] w-full rounded-lg object-cover" />}
+          {service.image && <Img image={service.image} alt={service.title} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[4/3] w-full rounded-lg object-cover" />}
           {service.description && <p className="text-lg whitespace-pre-line text-ink-muted">{service.description}</p>}
         </div>
       </article>

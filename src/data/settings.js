@@ -1,5 +1,5 @@
 // Business settings. `x_2nd` is the second-language text; leave it out (or empty) to show the default text.
-// Images are files under /images (added in phase L6); null shows none.
+// Images are file names in content/images (processed by scripts/images.js); null shows none.
 export default {
   site_name: 'Riverside Bakery',
   site_name_2nd: 'রিভারসাইড বেকারি',
@@ -31,7 +31,7 @@ export default {
     title_2nd: 'রিভারসাইড বেকারি | গ্রিনফিল্ডে তাজা রুটি ও কেক',
     description: 'A family bakery in Greenfield. Fresh bread every morning, custom cakes, catering and coffee.',
     description_2nd: 'গ্রিনফিল্ডের একটি পারিবারিক বেকারি। প্রতিদিন সকালে তাজা রুটি, অর্ডারে কেক, ক্যাটারিং আর কফি।',
-    og_image: null,
+    og_image: 'og-default.jpg',
   },
   // Which contact methods the Contact page and footer show.
   contact: { call: true, whatsapp: true, email: true, hours: true, map: true },

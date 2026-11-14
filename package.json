@@ -7,17 +7,19 @@
     "node": ">=24"
   },
   "scripts": {
-    "dev": "next dev --hostname 0.0.0.0 --port ${LITE_DEV_PORT:-28310}",
+    "dev": "node scripts/images.js && next dev --hostname 0.0.0.0 --port ${LITE_DEV_PORT:-28310}",
+    "images": "node scripts/images.js",
     "validate": "node scripts/validate-data.js",
     "test:data": "node --test scripts/",
-    "build": "node scripts/validate-data.js && next build",
-    "typecheck": "tsc --noEmit"
+    "build": "node scripts/validate-data.js && node scripts/images.js && next build",
+    "typecheck": "node scripts/images.js && tsc --noEmit"
   },
   "dependencies": {
     "next": "16.4.6",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "zod": "4.6.7"
+    "zod": "4.6.7",
+    "sharp": "0.35.5"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
