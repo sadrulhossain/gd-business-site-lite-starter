@@ -55,7 +55,9 @@ function Frame({ section, children, intro = true, page = false, dark = false, ti
 }
 
 const Hero: SectionView = ({ section, locale, messages }) => {
-  const keys = getContent(locale).sections.map((x) => x.key)
+  const sections = getContent(locale).sections
+  const keys = sections.map((x) => x.key)
+  const aboutTitle = sections.find((x) => x.key === 'about')?.title
 
   return (
   <section id={section.key} aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-night text-white">
@@ -81,14 +83,14 @@ const Hero: SectionView = ({ section, locale, messages }) => {
         {section.content && <p className="max-w-xl text-lg whitespace-pre-line text-white/90 sm:text-xl max-md:mx-auto">{section.content}</p>}
         <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row md:justify-start">
           {keys.includes('contact') && (
-            <Link href={localePath(locale, '/contact')} className={heroPrimary}>
+            <Link prefetch={false} href={localePath(locale, '/contact')} className={heroPrimary}>
               {messages.nav.contact}
               <Arrow />
             </Link>
           )}
           {keys.includes('about') && (
-            <Link href={localePath(locale, '/about')} className={heroGhost}>
-              {messages.sections.readMore}
+            <Link prefetch={false} href={localePath(locale, '/about')} className={heroGhost}>
+              {aboutTitle ?? messages.sections.readMore}
             </Link>
           )}
         </div>
@@ -141,7 +143,7 @@ const Services: SectionView = async ({ section, locale, messages, page }) => {
                 </span>
               )}
               <h3 className="text-xl font-bold tracking-tight">
-                <Link href={localePath(locale, `/services/${s.slug}`)} className="after:absolute after:inset-0 hover:text-brand-700">
+                <Link prefetch={false} href={localePath(locale, `/services/${s.slug}`)} className="after:absolute after:inset-0 hover:text-brand-700">
                   {s.title}
                 </Link>
               </h3>
@@ -288,7 +290,7 @@ const Contact: SectionView = ({ section, locale, settings, messages, page }) => 
       </dl>
       {!page && (
         <p className="mt-8 text-center">
-          <Link href={localePath(locale, '/contact')} className={btnPrimary}>
+          <Link prefetch={false} href={localePath(locale, '/contact')} className={btnPrimary}>
             {messages.sections.contactIntro}
             <Arrow />
           </Link>

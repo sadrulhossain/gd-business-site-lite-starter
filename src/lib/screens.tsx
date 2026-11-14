@@ -169,7 +169,7 @@ export const serviceDetail: Screen<{ slug: string }> = {
 
     return (
       <article className="mx-auto max-w-4xl px-4 py-14">
-        <Link href={localePath(locale, '/services')} className="text-brand-700 hover:underline">
+        <Link prefetch={false} href={localePath(locale, '/services')} className="text-brand-700 hover:underline">
           <span aria-hidden="true">←</span> {messages.pages.back}
         </Link>
         <h1 className="mt-4 font-display text-4xl font-extrabold tracking-tight">{service.title}</h1>
