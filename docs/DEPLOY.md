@@ -22,6 +22,18 @@ Every host needs the same four things, which the files in `public/` already prov
 - Connect the repo: build command `STATIC_EXPORT=1 pnpm build`, output directory `out`, `NODE_VERSION=24`. Or `wrangler pages deploy out`.
 - `out/_headers` is read as is. Add the env vars above.
 
+## Automatic deploy (GitHub Actions)
+ builds the export on every push to  (and on a manual run) and publishes it to each target that is switched on.
+A target is on when its repository variable is  (Settings > Secrets and variables > Actions); with none set, it only builds.
+
+| Target | Variable to switch on | Also needed |
+|--------|----------------------|-------------|
+| GitHub Pages |  | Settings > Pages > Source: GitHub Actions. Needs a custom domain or a user site: the site uses root-relative paths, so a project URL () will not load its CSS or images |
+| Cloudflare Pages |  | Variable ; secrets  (Pages edit) and  |
+| Netlify |  | Secrets  and  |
+
+Set the variable  to the live address (canonical URLs, sitemap) and, if different from the defaults,  / .
+
 ## GitHub release
 Pushing a tag `v*` runs `.github/workflows/release.yml`, which builds the site and attaches `site-<tag>.zip` (the contents of `out/`).
 `check.yml` runs the data, type, audit and build checks on every push.
