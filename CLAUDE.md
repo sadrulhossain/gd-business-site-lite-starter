@@ -4,12 +4,13 @@ Lite business site starter: one Next.js site at the repo root, no backend, no da
 gd-business-site-boilerplate (see docs/SYNC.md).
 
 ## Stack
-- Node 24 (patched tag), Next.js 16 App Router, React 19, Tailwind 4, TypeScript, pnpm (single package, no workspace)
+- Node 24 (patched tag), Next.js 16 App Router, static export only (`output: export`, no server, no middleware), React 19, Tailwind 4, TypeScript, pnpm (single package, no workspace)
 - sharp and Zod are pinned in docs/VERSIONS.md for later phases; not installed yet
 - nginx 1.30 preview in front of the dev server; Playwright for browser tests
 
 ## Layout
-- `src/app`, `src/components`, `src/lib`, `src/messages`, `src/styles` (theme tokens), `src/proxy.ts`
+- `src/app/(default)` (default locale at the root) and `src/app/[locale]` (second locale) are thin routes over `src/lib/screens.tsx`; content stub in `src/lib/content.ts`
+- `src/components`, `src/lib`, `src/messages`, `src/styles` (theme tokens)
 - `public/`, `e2e/`, `docker/` (node dev script, nginx preview), `scripts/`, `docs/`
 
 ## Docker and env

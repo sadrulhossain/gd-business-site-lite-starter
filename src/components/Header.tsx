@@ -1,7 +1,6 @@
 import Link from 'next/link'
-import type { Section, Settings } from '../lib/api'
+import { SECTION_PAGES, type Section, type Settings } from '../lib/content'
 import { defaultLocale, localePath, locales, type Messages } from '../lib/i18n'
-import { SECTION_PAGES } from '../lib/section-page'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 /** Site name, one link per visible section (the hero is the page top, so it has none; contact has its own page), Blog and Contact. */
@@ -22,9 +21,6 @@ export function Header({ locale, settings, sections, messages }: { locale: strin
                 {s.title}
               </Link>
             ))}
-          <Link href={localePath(locale, '/blog')} className="text-ink-muted hover:text-brand-700">
-            {messages.nav.blog}
-          </Link>
           <Link href={localePath(locale, '/contact')} className="text-ink-muted hover:text-brand-700">
             {messages.nav.contact}
           </Link>

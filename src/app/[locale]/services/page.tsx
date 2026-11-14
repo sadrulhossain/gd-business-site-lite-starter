@@ -1,6 +1,7 @@
-import { sectionPage } from '../../../lib/section-page'
+import { localeRoute } from '../../../lib/routes'
+import { sectionScreen } from '../../../lib/screens'
 
-const page = sectionPage('services')
+const route = localeRoute(sectionScreen('services'))
 
-export const generateMetadata = page.generateMetadata
-export default page.Page
+export const generateMetadata = route.generateMetadata
+export default route.Page

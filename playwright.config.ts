@@ -1,8 +1,7 @@
 import { defineConfig } from '@playwright/test'
 
-/** Home screenshots against the running stack (make up), run in the `e2e` compose service. */
-const origin = process.env.E2E_PORTAL_ORIGIN ?? 'http://gd-business-site-lite-starter.localhost:28390'
-const host = new URL(origin).hostname
+/** Browser tests against the nginx preview of ./out (make build, make preview). */
+const origin = process.env.E2E_PORTAL_ORIGIN ?? 'http://127.0.0.1:28390'
 
 export default defineConfig({
   testDir: 'e2e',
@@ -13,6 +12,5 @@ export default defineConfig({
   use: {
     baseURL: origin,
     viewport: { width: 1280, height: 900 },
-    launchOptions: { args: ['--no-sandbox', `--host-resolver-rules=MAP ${host} nginx:80`] },
   },
 })
