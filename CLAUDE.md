@@ -5,7 +5,7 @@ gd-business-site-boilerplate (see docs/SYNC.md).
 
 ## Stack
 - Node 24 (patched tag), Next.js 16 App Router, static export only (`output: export`, no server, no middleware), React 19, Tailwind 4, TypeScript, pnpm (single package, no workspace)
-- sharp and Zod are pinned in docs/VERSIONS.md for later phases; not installed yet
+- Zod validates src/data/*.js (content, x / x_2nd fields); sharp is pinned in docs/VERSIONS.md for phase L6, not installed yet
 - nginx 1.30 preview in front of the dev server; Playwright for browser tests
 
 ## Layout
