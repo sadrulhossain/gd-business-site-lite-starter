@@ -6,6 +6,7 @@ import { HoursList } from '../components/HoursList'
 import { JsonLd } from '../components/JsonLd'
 import { Picture } from '../components/Media'
 import { SectionBlock, SectionRenderer } from '../components/sections'
+import { contactMethods, mapHref } from './contact'
 import { getContent, SECTION_PAGES } from './content'
 import { fill, getMessages, localePath } from './i18n'
 import { localBusinessJsonLd, pageMetadata } from './seo'
@@ -98,7 +99,7 @@ export function legalScreen(kind: 'privacy' | 'terms'): Screen {
   }
 }
 
-/** Contact details and opening hours (the message form needs a server and is not part of the static site). */
+/** Call, WhatsApp, email, hours and map link, each toggled by the flags in settings.js (no message form: the site has no server). */
 export const contact: Screen = {
   metadata: (locale) => {
     const t = getMessages(locale).contactPage
@@ -109,7 +110,8 @@ export const contact: Screen = {
     const { settings } = getContent(locale)
     const messages = getMessages(locale)
     const t = messages.contactPage
-    const mapUrl = settings.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address.replace(/\s*\n\s*/g, ', '))}` : null
+    const methods = contactMethods(settings, messages.sections)
+    const mapUrl = mapHref(settings)
 
     return (
       <div className="mx-auto grid max-w-6xl gap-12 px-4 py-14 md:grid-cols-2">
@@ -123,20 +125,14 @@ export const contact: Screen = {
             <h2 className="text-xl font-semibold">{t.details}</h2>
             <address className="space-y-1 not-italic text-ink-muted">
               {settings.address && <p className="whitespace-pre-line">{settings.address}</p>}
-              {settings.phone && (
-                <p>
-                  <a href={`tel:${settings.phone.replace(/\s+/g, '')}`} className="text-brand-700 hover:underline">
-                    {settings.phone}
+              {methods.map((m) => (
+                <p key={m.key}>
+                  <span className="text-ink">{m.label}: </span>
+                  <a href={m.href} className="text-brand-700 hover:underline">
+                    {m.text}
                   </a>
                 </p>
-              )}
-              {settings.email && (
-                <p>
-                  <a href={`mailto:${settings.email}`} className="text-brand-700 hover:underline">
-                    {settings.email}
-                  </a>
-                </p>
-              )}
+              ))}
             </address>
             {mapUrl && (
               <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-block text-brand-700 underline">
@@ -145,28 +141,29 @@ export const contact: Screen = {
             )}
           </section>
 
-          <section className="space-y-2">
-            <h2 className="text-xl font-semibold">{t.hours}</h2>
-            <HoursList settings={settings} messages={messages} />
-          </section>
+          {settings.contact.hours && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold">{t.hours}</h2>
+              <HoursList settings={settings} messages={messages} />
+            </section>
+          )}
         </aside>
       </div>
     )
   },
 }
 
-/** Service detail at /services/<id>/. Pages exist for the ids getContent() lists (dynamicParams is off). */
-export const serviceDetail: Screen<{ id: string }> & { params(locale: string): { id: string }[] } = {
-  params: (locale) => getContent(locale).services.map((s) => ({ id: String(s.id) })),
-  metadata: (locale, { id }) => {
+/** Service detail at /services/<slug>/. */
+export const serviceDetail: Screen<{ slug: string }> = {
+  metadata: (locale, { slug }) => {
     const content = getContent(locale)
-    const service = content.services.find((s) => String(s.id) === id)
+    const service = content.services.find((s) => s.slug === slug)
     if (!service) notFound()
 
-    return pageMetadata({ locale, path: `/services/${service.id}`, siteName: content.settings.site_name, title: service.title, description: service.description, image: service.image?.url })
+    return pageMetadata({ locale, path: `/services/${service.slug}`, siteName: content.settings.site_name, title: service.title, description: service.description, image: service.image?.url })
   },
-  Page: ({ locale, extra: { id } }) => {
-    const service = getContent(locale).services.find((s) => String(s.id) === id)
+  Page: ({ locale, extra: { slug } }) => {
+    const service = getContent(locale).services.find((s) => s.slug === slug)
     if (!service) notFound()
     const messages = getMessages(locale)
 
@@ -183,4 +180,38 @@ export const serviceDetail: Screen<{ id: string }> & { params(locale: string): {
       </article>
     )
   },
+}
+
+export interface PageEntry {
+  /** URL segments below the locale root: ['about'], ['services', 'daily-bread']. */
+  path: string[]
+  screen: Screen<any> // eslint-disable-line @typescript-eslint/no-explicit-any
+  extra: object
+}
+
+/**
+ * Every page of a locale except Home, from the data: a section's page exists only while that section is visible
+ * (hidden sections generate nothing). Privacy and terms are always there. Both [...slug] routes build from this list.
+ */
+export function listPages(locale: string): PageEntry[] {
+  const { sections, services } = getContent(locale)
+  const visible = (key: string) => sections.some((s) => s.key === key)
+  const pages: PageEntry[] = []
+
+  for (const key of Object.keys(SECTION_PAGES)) {
+    if (visible(key)) pages.push({ path: [key], screen: sectionScreen(key), extra: {} })
+  }
+  if (visible('services')) {
+    for (const service of services) pages.push({ path: ['services', service.slug], screen: serviceDetail, extra: { slug: service.slug } })
+  }
+  if (visible('contact')) pages.push({ path: ['contact'], screen: contact, extra: {} })
+  pages.push({ path: ['privacy'], screen: legalScreen('privacy'), extra: {} }, { path: ['terms'], screen: legalScreen('terms'), extra: {} })
+
+  return pages
+}
+
+export function findPage(locale: string, slug: string[]): PageEntry | undefined {
+  const wanted = slug.join('/')
+
+  return listPages(locale).find((page) => page.path.join('/') === wanted)
 }

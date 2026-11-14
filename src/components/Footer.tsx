@@ -1,5 +1,6 @@
 import type { Settings } from '../lib/content'
 import Link from 'next/link'
+import { contactMethods } from '../lib/contact'
 import { localePath, type Messages } from '../lib/i18n'
 import { HoursList } from './HoursList'
 
@@ -8,7 +9,8 @@ const SOCIAL: Record<string, string> = { facebook: 'Facebook', instagram: 'Insta
 /** Contact details, opening hours and social links, all from public settings. */
 export function Footer({ locale, settings, messages }: { locale: string; settings: Settings; messages: Messages }) {
   const social = Object.entries(settings.social_links ?? {}).filter(([, url]) => url)
-  const hasHours = Object.keys(settings.hours ?? {}).length > 0
+  const hasHours = settings.contact.hours && Object.keys(settings.hours ?? {}).length > 0
+  const methods = contactMethods(settings, messages.sections)
 
   return (
     <footer className="border-t border-line bg-surface">
@@ -22,20 +24,13 @@ export function Footer({ locale, settings, messages }: { locale: string; setting
           <h2 className="font-semibold">{messages.footer.contact}</h2>
           <address className="space-y-1 not-italic text-ink-muted">
             {settings.address && <p className="whitespace-pre-line">{settings.address}</p>}
-            {settings.phone && (
-              <p>
-                <a href={`tel:${settings.phone.replace(/\s+/g, '')}`} className="hover:text-brand-700">
-                  {settings.phone}
+            {methods.map((m) => (
+              <p key={m.key}>
+                <a href={m.href} className="hover:text-brand-700">
+                  {m.text}
                 </a>
               </p>
-            )}
-            {settings.email && (
-              <p>
-                <a href={`mailto:${settings.email}`} className="hover:text-brand-700">
-                  {settings.email}
-                </a>
-              </p>
-            )}
+            ))}
           </address>
           {social.length > 0 && (
             <ul aria-label={messages.footer.follow} className="flex flex-wrap gap-x-4 gap-y-1 pt-1">

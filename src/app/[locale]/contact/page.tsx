@@ -1,7 +1,0 @@
-import { localeRoute } from '../../../lib/routes'
-import { contact } from '../../../lib/screens'
-
-const route = localeRoute(contact)
-
-export const generateMetadata = route.generateMetadata
-export default route.Page

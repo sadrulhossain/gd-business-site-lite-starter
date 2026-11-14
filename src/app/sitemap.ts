@@ -1,22 +1,13 @@
 import type { MetadataRoute } from 'next'
-import { getContent, SECTION_PAGES } from '../lib/content'
 import { defaultLocale, localePath, locales } from '../lib/i18n'
+import { listPages } from '../lib/screens'
 import { absolute } from '../lib/seo'
 
 export const dynamic = 'force-static'
 
-/** Every public page in every locale, each with its hreflang alternates. Section pages are listed only while the section exists. */
+/** Every public page in every locale, each with its hreflang alternates. Taken from listPages(), so hidden sections are not listed. */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const { sections, services } = getContent(defaultLocale)
-
-  const paths: string[] = [
-    '/',
-    ...sections.flatMap((s) => (SECTION_PAGES[s.key] ? [SECTION_PAGES[s.key]!] : [])),
-    '/contact',
-    '/privacy',
-    '/terms',
-    ...services.map((s) => `/services/${s.id}`),
-  ]
+  const paths: string[] = ['/', ...listPages(defaultLocale).map((page) => `/${page.path.join('/')}`)]
 
   return paths.flatMap((path) =>
     locales.map((locale) => ({

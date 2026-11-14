@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { getContent, type Section, type Settings } from '../../lib/content'
+import { contactMethods } from '../../lib/contact'
 import { localePath, type Messages } from '../../lib/i18n'
+import { GalleryGrid } from '../GalleryGrid'
 import { Picture } from '../Media'
 
 interface Ctx {
@@ -77,7 +79,7 @@ const Services: SectionView = async ({ section, locale, messages, page }) => {
             <li key={s.id} className={`${card} space-y-2`}>
               {s.image && <Picture image={s.image} className="mb-3 aspect-[3/2] w-full rounded-sm object-cover" />}
               <h3 className="text-lg font-semibold">
-                <Link href={localePath(locale, `/services/${s.id}`)} className="hover:text-brand-700 hover:underline">
+                <Link href={localePath(locale, `/services/${s.slug}`)} className="hover:text-brand-700 hover:underline">
                   {s.title}
                 </Link>
               </h3>
@@ -124,16 +126,7 @@ const Gallery: SectionView = async ({ section, locale, messages, page }) => {
       {items.length === 0 ? (
         <p className="text-ink-muted">{messages.sections.empty}</p>
       ) : (
-        <ul className="grid grid-cols-2 gap-4 md:grid-cols-3">
-          {items.map((g) => (
-            <li key={g.id}>
-              <figure>
-                {g.image && <Picture image={g.image} alt={g.title ?? g.caption ?? ''} className="aspect-square w-full rounded-md object-cover" />}
-                {g.caption && <figcaption className="mt-1 text-sm text-ink-muted">{g.caption}</figcaption>}
-              </figure>
-            </li>
-          ))}
-        </ul>
+        <GalleryGrid items={items} labels={messages.sections} />
       )}
     </Frame>
   )
@@ -184,9 +177,14 @@ const Team: SectionView = async ({ section, locale, messages, page }) => {
 }
 
 const Contact: SectionView = ({ section, settings, messages, page }) => {
-  const rows: { label: string; node: ReactNode }[] = []
-  if (settings.phone) rows.push({ label: messages.sections.call, node: <a href={`tel:${settings.phone.replace(/s+/g, '')}`} className="text-brand-700 hover:underline">{settings.phone}</a> })
-  if (settings.email) rows.push({ label: messages.sections.email, node: <a href={`mailto:${settings.email}`} className="text-brand-700 hover:underline">{settings.email}</a> })
+  const rows: { label: string; node: ReactNode }[] = contactMethods(settings, messages.sections).map((m) => ({
+    label: m.label,
+    node: (
+      <a href={m.href} className="text-brand-700 hover:underline">
+        {m.text}
+      </a>
+    ),
+  }))
   if (settings.address) rows.push({ label: messages.sections.visit, node: <span className="whitespace-pre-line">{settings.address}</span> })
 
   return (

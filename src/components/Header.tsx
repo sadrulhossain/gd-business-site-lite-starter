@@ -3,7 +3,7 @@ import { SECTION_PAGES, type Section, type Settings } from '../lib/content'
 import { defaultLocale, localePath, locales, type Messages } from '../lib/i18n'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
-/** Site name, one link per visible section (the hero is the page top, so it has none; contact has its own page), Blog and Contact. */
+/** Site name and one link per visible section (the hero is the page top, so it has none); Contact links to its own page while that section is visible. */
 export function Header({ locale, settings, sections, messages }: { locale: string; settings: Settings; sections: Section[]; messages: Messages }) {
   const home = localePath(locale)
 
@@ -21,9 +21,11 @@ export function Header({ locale, settings, sections, messages }: { locale: strin
                 {s.title}
               </Link>
             ))}
-          <Link href={localePath(locale, '/contact')} className="text-ink-muted hover:text-brand-700">
-            {messages.nav.contact}
-          </Link>
+          {sections.some((s) => s.key === 'contact') && (
+            <Link href={localePath(locale, '/contact')} className="text-ink-muted hover:text-brand-700">
+              {messages.nav.contact}
+            </Link>
+          )}
           {locales.length > 1 && <LanguageSwitcher current={locale} label={messages.language.label} locales={locales} unprefixed={defaultLocale} />}
         </nav>
       </div>

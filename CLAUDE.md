@@ -9,7 +9,7 @@ gd-business-site-boilerplate (see docs/SYNC.md).
 - nginx 1.30 preview in front of the dev server; Playwright for browser tests
 
 ## Layout
-- `src/app/(default)` (default locale at the root) and `src/app/[locale]` (second locale) are thin routes over `src/lib/screens.tsx`; content stub in `src/lib/content.ts`
+- `src/app/(default)` (default locale at the root) and `src/app/[locale]` (second locale) are thin routes (Home + one `[...slug]` each) over `src/lib/screens.tsx` (`listPages()` = visible sections); content in `src/data/*.js`, types in `src/lib/content.ts`
 - `src/components`, `src/lib`, `src/messages`, `src/styles` (theme tokens)
 - `public/`, `e2e/`, `docker/` (node dev script, nginx preview), `scripts/`, `docs/`
 
