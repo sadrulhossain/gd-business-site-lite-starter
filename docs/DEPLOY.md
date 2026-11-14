@@ -23,17 +23,17 @@ Every host needs the same four things, which the files in `public/` already prov
 - `out/_headers` is read as is. Add the env vars above.
 
 ## Automatic deploy (GitHub Actions)
-Three separate workflows, one per target, each builds the export and publishes it on every push to `main` (and on a manual run).
-Each stays off until its repository variable is `true` (Settings > Secrets and variables > Actions), so a push never fails for missing secrets.
+`.github/workflows/deploy.yml` runs on every push to `main` (and by hand): it builds the export once, then publishes it to every target that is configured.
+A target that is not configured is not an error: its job runs, prints a notice and passes, so a push never ends failed or skipped.
 
-| Workflow | Switch on | Also needed |
-|----------|-----------|-------------|
-| `deploy-github-pages.yml` | variable `DEPLOY_GITHUB_PAGES=true` | Settings > Pages > Source: GitHub Actions. Needs a custom domain or a user site: the site uses root-relative paths, so a project URL (`/repo-name/`) will not load its CSS or images |
-| `deploy-cloudflare.yml` | variable `DEPLOY_CLOUDFLARE=true` | variable `CLOUDFLARE_PROJECT`; secrets `CLOUDFLARE_API_TOKEN` (Pages: Edit) and `CLOUDFLARE_ACCOUNT_ID` |
-| `deploy-netlify.yml` | variable `DEPLOY_NETLIFY=true` | secrets `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` |
+| Target | Switch on |
+|--------|-----------|
+| GitHub Pages | variable `DEPLOY_GITHUB_PAGES=true`, and Settings > Pages > Source: GitHub Actions. Needs a custom domain or a user site: the site uses root-relative paths, so a project URL (`/repo-name/`) will not load its CSS or images |
+| Cloudflare Pages | secrets `CLOUDFLARE_API_TOKEN` (Pages: Edit) and `CLOUDFLARE_ACCOUNT_ID`, variable `CLOUDFLARE_PROJECT` |
+| Netlify | secrets `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` |
 
 Set the variable `SITE_URL` to the live address (canonical URLs, sitemap, no trailing slash) and, if different from the defaults `en` and `en,bn`,
-`LOCALE_DEFAULT` and `LOCALE_SUPPORTED`.
+`LOCALE_DEFAULT` and `LOCALE_SUPPORTED`. A real deploy failure (bad token, Pages not enabled) still fails the run, on purpose.
 
 ## GitHub release
 Pushing a tag `v*` runs `.github/workflows/release.yml`, which builds the site and attaches `site-<tag>.zip` (the contents of `out/`).
