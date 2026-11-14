@@ -13,12 +13,12 @@ gd-business-site-boilerplate (see docs/SYNC.md).
 - `public/`, `e2e/`, `docker/` (node dev script, nginx preview), `scripts/`, `docs/`
 
 ## Docker and env
-- Containers: `gd-business-site-lite-starter-<tech>` (node, nginx, e2e), via COMPOSE_PROJECT_NAME
+- Containers: `gd-business-site-lite-starter-<tech>` (node, build, nginx), via COMPOSE_PROJECT_NAME
 - Root `.env` (from `.env.example`) holds Docker and shared settings only; no app secrets in it beyond placeholders
-- Ports, env-configured: LITE_DEV_PORT=28310 (Next dev, internal), LITE_PREVIEW_PORT=28390 (nginx preview, published)
+- Ports, env-configured: LITE_DEV_PORT=28310 (Next dev), LITE_PREVIEW_PORT=28390 (nginx preview of ./out); both bound to 127.0.0.1
 
 ## Make
-- `make up` / `make down`, `make ports`, `make versions`, `make web` (install, typecheck, build), `make check`, `make e2e`
+- `make up` (dev server) / `make down`, `make ports`, `make build` (static export to ./out), `make preview` (nginx on ./out), `make versions`, `make check`
 
 ## Rules
 1) One phase at a time; read only this file, the phase row in docs/PHASES.md and the files it names.

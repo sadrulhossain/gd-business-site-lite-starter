@@ -1,10 +1,17 @@
-# Dev stack: Next dev server (node) behind an nginx preview. Every service lists its own environment; no env_file.
+# Dev stack. node = Next dev server; build = one-off static export into ./out; nginx = optional preview of ./out.
+# Ports are bound to 127.0.0.1 and come from .env. Every service lists its own environment; no env_file.
+x-node: &node
+  image: node:${NODE_VERSION}-alpine
+  working_dir: /app
+  volumes:
+    - .:/app
+    - root-node-modules:/app/node_modules
+
 services:
   node:
-    image: node:${NODE_VERSION}-alpine
+    <<: *node
     container_name: ${COMPOSE_PROJECT_NAME}-node
     restart: unless-stopped
-    working_dir: /app
     command: ["sh", "/app/docker/node/dev.sh"]
     environment:
       - NODE_ENV=development
@@ -18,49 +25,49 @@ services:
       - LOCALE_DEFAULT=${LOCALE_DEFAULT}
       - LOCALE_SUPPORTED=${LOCALE_SUPPORTED}
       - PORTAL_REVALIDATE_SECRET=${PORTAL_REVALIDATE_SECRET:-}
-      - SITE_URL=${SITE_URL:-http://${APP_DOMAIN}:${LITE_PREVIEW_PORT}}
-      - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-    volumes:
-      - .:/app
-      - root-node-modules:/app/node_modules
+      - SITE_URL=${SITE_URL:-http://127.0.0.1:${LITE_PREVIEW_PORT}}
+    ports:
+      - "127.0.0.1:${LITE_DEV_PORT}:${LITE_DEV_PORT}"
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:$$LITE_DEV_PORT/"]
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 $$LITE_DEV_PORT"]
       interval: 5s
       timeout: 5s
       retries: 60
       start_period: 120s
 
-  # Browser tests (make e2e). Not started by `make up`; same code and node_modules as the node service.
-  e2e:
-    image: mcr.microsoft.com/playwright:v1.65.0-noble
-    container_name: ${COMPOSE_PROJECT_NAME}-e2e
-    profiles: ["e2e"]
-    working_dir: /app
+  # make build: `docker compose run --rm build`. Output: ./out
+  build:
+    <<: *node
+    container_name: ${COMPOSE_PROJECT_NAME}-build
+    profiles: ["build"]
+    command: ["sh", "/app/docker/node/build.sh"]
     environment:
-      - E2E_PORTAL_ORIGIN=http://${APP_DOMAIN}:${LITE_PREVIEW_PORT}
-    volumes:
-      - .:/app
-      - root-node-modules:/app/node_modules
+      - NODE_ENV=production
+      - STATIC_EXPORT=1
+      - NEXT_TELEMETRY_DISABLED=1
+      - COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+      - PNPM_STORE_DIR=/app/node_modules/.pnpm-store
+      - LOCALE_DEFAULT=${LOCALE_DEFAULT}
+      - LOCALE_SUPPORTED=${LOCALE_SUPPORTED}
+      - SITE_URL=${SITE_URL:-http://127.0.0.1:${LITE_PREVIEW_PORT}}
 
+  # make preview: serves ./out (clean URLs, 404.html).
   nginx:
     image: nginx:${NGINX_VERSION}-alpine
     container_name: ${COMPOSE_PROJECT_NAME}-nginx
+    profiles: ["preview"]
     restart: unless-stopped
-    environment:
-      - APP_DOMAIN=${APP_DOMAIN}
-      - LITE_DEV_PORT=${LITE_DEV_PORT}
     ports:
-      - "${LITE_PREVIEW_PORT}:80"
+      - "127.0.0.1:${LITE_PREVIEW_PORT}:80"
     volumes:
       - ./docker/nginx/templates:/etc/nginx/templates:ro
       - ./docker/nginx/snippets:/etc/nginx/snippets:ro
+      - ./out:/usr/share/nginx/html:ro
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/healthz"]
       interval: 10s
       timeout: 3s
       retries: 5
-    depends_on:
-      - node
 
 volumes:
   root-node-modules:

@@ -28,3 +28,5 @@ logs/
 .claude/settings.local.json
 next-env.d.ts
 
+.next-build/
+out/

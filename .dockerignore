@@ -8,5 +8,6 @@
 **/.next
 **/.next-build
 **/dist
+out
 **/coverage
 **/*.log
