@@ -30,6 +30,10 @@ gd-business-site-boilerplate (see docs/SYNC.md).
 6) Finish: tick the phase in docs/PHASES.md, commit, reply in 8 lines or fewer (done, deviations, decisions needed),
    then STOP and wait for approval.
 
+## Branches
+- Feature branch per phase, cut from the updated `main`: `feature/phase-<phase no.>-<task name>`, lower-case, hyphenated
+  (for example `feature/phase-l2-static-export`).
+
 ## Commits
 - Plain messages: `phase LN: title` (for example `phase L0: clone and trim`).
 - Never add any Claude signature, Co-Authored-By trailer, "Generated with" line, session link or attribution to
