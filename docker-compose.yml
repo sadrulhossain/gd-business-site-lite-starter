@@ -1,7 +1,11 @@
 # Dev stack. node = Next dev server; build = one-off static export into ./out; nginx = optional preview of ./out.
 # Ports are bound to 127.0.0.1 and come from .env. Every service lists its own environment; no env_file.
 x-node: &node
-  image: node:${NODE_VERSION}-alpine
+  image: ${COMPOSE_PROJECT_NAME}-node:${NODE_VERSION}
+  build:
+    context: ./docker/node
+    args:
+      NODE_VERSION: ${NODE_VERSION}
   working_dir: /app
   volumes:
     - .:/app
@@ -49,9 +53,26 @@ services:
       - LOCALE_SUPPORTED=${LOCALE_SUPPORTED}
       - SITE_URL=${SITE_URL:-http://127.0.0.1:${LITE_PREVIEW_PORT}}
 
+  # make e2e / make lighthouse: browser tests and Lighthouse against the preview (the nginx service must be up).
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.65.0-noble
+    container_name: ${COMPOSE_PROJECT_NAME}-e2e
+    profiles: ["e2e"]
+    working_dir: /app
+    environment:
+      - E2E_PORTAL_ORIGIN=http://nginx
+      - NEXT_TELEMETRY_DISABLED=1
+    volumes:
+      - .:/app
+      - root-node-modules:/app/node_modules
+
   # make preview: serves ./out (clean URLs, 404.html).
   nginx:
-    image: nginx:${NGINX_VERSION}-alpine
+    image: ${COMPOSE_PROJECT_NAME}-nginx:${NGINX_VERSION}
+    build:
+      context: ./docker/nginx
+      args:
+        NGINX_VERSION: ${NGINX_VERSION}
     container_name: ${COMPOSE_PROJECT_NAME}-nginx
     profiles: ["preview"]
     restart: unless-stopped

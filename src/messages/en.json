@@ -3,7 +3,8 @@
     "label": "Main navigation",
     "home": "Home",
     "skip": "Skip to content",
-    "contact": "Contact"
+    "contact": "Contact",
+    "explore": "Explore"
   },
   "language": {
     "label": "Language"

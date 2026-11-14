@@ -20,7 +20,7 @@ gd-business-site-boilerplate (see docs/SYNC.md).
 - Ports, env-configured: LITE_DEV_PORT=28310 (Next dev), LITE_PREVIEW_PORT=28390 (nginx preview of ./out); both bound to 127.0.0.1
 
 ## Make
-- `make up` (dev server) / `make down`, `make ports`, `make build` (static export to ./out), `make preview` (nginx on ./out), `make versions`, `make check`
+- `make up` (dev server) / `make down`, `make ports`, `make build` (images + static export to ./out), `make preview` (nginx on ./out), `make versions`, `make typecheck`, `make audit`, `make scan` (Trivy), `make e2e` and `make lighthouse` (need the preview up), `make check` (all of it)
 
 ## Rules
 1) One phase at a time; read only this file, the phase row in docs/PHASES.md and the files it names.

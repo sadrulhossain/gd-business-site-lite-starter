@@ -1,0 +1,39 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      LOCALE_DEFAULT: en
+      LOCALE_SUPPORTED: en,bn
+      SITE_URL: http://127.0.0.1:28390
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.3
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - name: Data, tests, types
+        run: |
+          node scripts/validate-data.js
+          node --test scripts/
+          pnpm typecheck
+          node scripts/check-floors.mjs
+      - name: Audit
+        run: pnpm audit --prod
+      - name: Static export
+        run: STATIC_EXPORT=1 pnpm build
+      - name: Browser tests on the export
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          cp .env.example .env
+          docker compose --profile preview up -d --build --wait nginx
+          E2E_PORTAL_ORIGIN=http://127.0.0.1:28390 pnpm exec playwright test

@@ -17,10 +17,10 @@ export function NotFoundContent({ texts, defaultLocale }: { texts: Record<string
   return (
     // Next renders 404s inside its own <html> (no lang attribute), hence `lang` on the content wrapper.
     <div lang={locale} className="mx-auto max-w-3xl px-4 py-20 text-center">
-      <p className="font-display text-6xl font-semibold text-brand-600">404</p>
+      <p className="font-display text-7xl font-extrabold text-brand-600">404</p>
       <h1 className="mt-4 font-display text-3xl font-semibold">{t.title}</h1>
       <p className="mt-3 text-ink-muted">{t.text}</p>
-      <Link href={locale === defaultLocale ? '/' : `/${locale}`} className="mt-6 inline-block rounded-md bg-brand-700 px-4 py-2 text-white hover:bg-brand-800">
+      <Link href={locale === defaultLocale ? '/' : `/${locale}`} className="mt-6 inline-block rounded-full bg-brand-600 px-6 py-3 font-semibold text-white hover:bg-brand-700">
         {t.home}
       </Link>
     </div>

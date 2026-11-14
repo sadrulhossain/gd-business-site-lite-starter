@@ -1,6 +1,7 @@
 /*
- * Portal theme: airy, warm, serif headings, rounder corners. Colours are reset first so
- * only the tokens below exist as utilities (bg-brand-600, text-ink, font-display ...).
+ * Portal theme: modern and confident. Emerald brand, amber accent, deep forest green for dark bands, soft tinted canvas,
+ * large rounded corners and layered shadows. Colours are reset first so only the tokens below exist as
+ * utilities (bg-brand-600, text-ink, bg-night, font-display ...).
  */
 @import './base.css';
 
@@ -8,32 +9,43 @@
   --color-*: initial;
 
   --color-white: #fff;
-  --color-canvas: #fbf8f3;
+  --color-canvas: #f5faf7;
   --color-surface: #fff;
-  --color-line: #e7dfd2;
-  --color-ink: #2a2118;
-  --color-ink-muted: #6f6454;
+  --color-line: #dce9e2;
+  --color-ink: #0f1f19;
+  --color-ink-muted: #51635b;
+  --color-night: #04150f;
+  --color-night-soft: #0b261c;
 
-  --color-brand-50: #fff4ec;
-  --color-brand-100: #ffe5d2;
-  --color-brand-200: #fecaa3;
-  --color-brand-300: #fdab70;
-  --color-brand-400: #fb8a3c;
-  --color-brand-500: #f06a12;
-  --color-brand-600: #d9500a;
-  --color-brand-700: #b43c0b;
-  --color-brand-800: #92310f;
-  --color-brand-900: #782b10;
+  --color-brand-50: #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-200: #a7f3d0;
+  --color-brand-300: #6ee7b7;
+  --color-brand-400: #34d399;
+  --color-brand-500: #10b981;
+  --color-brand-600: #047857;
+  --color-brand-700: #065f46;
+  --color-brand-800: #064e3b;
+  --color-brand-900: #022c22;
+
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
 
   --color-success: #2f7d4f;
   --color-warning: #b7791f;
   --color-danger: #c53030;
 
-  --font-display: ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  --font-display: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
-  --radius-sm: 0.5rem;
-  --radius-md: 0.875rem;
+  --radius-sm: 0.625rem;
+  --radius-md: 1rem;
   --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+
+  --shadow-soft: 0 1px 2px rgb(15 31 25 / 0.04), 0 8px 24px -8px rgb(4 120 87 / 0.14);
+  --shadow-lift: 0 2px 4px rgb(15 31 25 / 0.05), 0 20px 40px -12px rgb(4 120 87 / 0.3);
 
   --text-base: 1.0625rem;
 }
