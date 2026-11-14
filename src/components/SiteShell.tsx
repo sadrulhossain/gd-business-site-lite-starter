@@ -8,13 +8,14 @@ import { Header } from './Header'
 
 const RTL = new Set(['ar', 'he', 'fa', 'ur'])
 
-/** Layout metadata of one locale: default title (site name | tagline) and the template that appends the site name. */
+/** Layout metadata of one locale: the SEO defaults of settings.js and the template that appends the site name to page titles. */
 export function siteMetadata(locale: string): Metadata {
   const { settings } = getContent(locale)
 
   return {
-    title: { default: settings.tagline ? `${settings.site_name} | ${settings.tagline}` : settings.site_name, template: `%s | ${settings.site_name}` },
-    description: settings.tagline ?? undefined,
+    title: { default: settings.seo.title, template: `%s | ${settings.site_name}` },
+    description: settings.seo.description,
+    openGraph: settings.seo.og_image ? { images: [{ url: settings.seo.og_image }] } : undefined,
     metadataBase: new URL(siteUrl()),
     icons: { icon: '/icon.svg' },
   }

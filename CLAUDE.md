@@ -10,6 +10,7 @@ gd-business-site-boilerplate (see docs/SYNC.md).
 
 ## Layout
 - `src/app/(default)` (default locale at the root) and `src/app/[locale]` (second locale) are thin routes (Home + one `[...slug]` each) over `src/lib/screens.tsx` (`listPages()` = visible sections); content in `src/data/*.js`, types in `src/lib/content.ts`
+- Second-locale route files are named `*.l2.tsx` (see next.config.mjs): they are pages only when LOCALE_SUPPORTED has a second code, so a one-language site generates no second routes
 - `src/components`, `src/lib`, `src/messages`, `src/styles` (theme tokens)
 - `public/`, `e2e/`, `docker/` (node dev script, nginx preview), `scripts/`, `docs/`
 

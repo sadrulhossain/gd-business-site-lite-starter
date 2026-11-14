@@ -21,11 +21,11 @@ export interface Screen<X extends object = Record<string, never>> {
 }
 
 export const home: Screen = {
-  // No title: the layout's default (site name | tagline) applies.
+  // No title: the layout's default (seo.title) applies.
   metadata: (locale) => {
     const { settings } = getContent(locale)
 
-    return pageMetadata({ locale, path: '/', siteName: settings.site_name, description: settings.tagline })
+    return pageMetadata({ locale, path: '/', siteName: settings.site_name, description: settings.seo.description })
   },
   Page: ({ locale }) => {
     const { settings, sections } = getContent(locale)
