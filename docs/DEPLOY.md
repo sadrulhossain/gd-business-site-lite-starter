@@ -23,16 +23,17 @@ Every host needs the same four things, which the files in `public/` already prov
 - `out/_headers` is read as is. Add the env vars above.
 
 ## Automatic deploy (GitHub Actions)
- builds the export on every push to  (and on a manual run) and publishes it to each target that is switched on.
-A target is on when its repository variable is  (Settings > Secrets and variables > Actions); with none set, it only builds.
+Three separate workflows, one per target, each builds the export and publishes it on every push to `main` (and on a manual run).
+Each stays off until its repository variable is `true` (Settings > Secrets and variables > Actions), so a push never fails for missing secrets.
 
-| Target | Variable to switch on | Also needed |
-|--------|----------------------|-------------|
-| GitHub Pages |  | Settings > Pages > Source: GitHub Actions. Needs a custom domain or a user site: the site uses root-relative paths, so a project URL () will not load its CSS or images |
-| Cloudflare Pages |  | Variable ; secrets  (Pages edit) and  |
-| Netlify |  | Secrets  and  |
+| Workflow | Switch on | Also needed |
+|----------|-----------|-------------|
+| `deploy-github-pages.yml` | variable `DEPLOY_GITHUB_PAGES=true` | Settings > Pages > Source: GitHub Actions. Needs a custom domain or a user site: the site uses root-relative paths, so a project URL (`/repo-name/`) will not load its CSS or images |
+| `deploy-cloudflare.yml` | variable `DEPLOY_CLOUDFLARE=true` | variable `CLOUDFLARE_PROJECT`; secrets `CLOUDFLARE_API_TOKEN` (Pages: Edit) and `CLOUDFLARE_ACCOUNT_ID` |
+| `deploy-netlify.yml` | variable `DEPLOY_NETLIFY=true` | secrets `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` |
 
-Set the variable  to the live address (canonical URLs, sitemap) and, if different from the defaults,  / .
+Set the variable `SITE_URL` to the live address (canonical URLs, sitemap, no trailing slash) and, if different from the defaults `en` and `en,bn`,
+`LOCALE_DEFAULT` and `LOCALE_SUPPORTED`.
 
 ## GitHub release
 Pushing a tag `v*` runs `.github/workflows/release.yml`, which builds the site and attaches `site-<tag>.zip` (the contents of `out/`).

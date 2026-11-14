@@ -1,0 +1,42 @@
+name: deploy-cloudflare
+
+# Publishes ./out to Cloudflare Pages on every push to main. Off until the repository variable DEPLOY_CLOUDFLARE is 'true'.
+# Variables: CLOUDFLARE_PROJECT (Pages project name), SITE_URL, LOCALE_DEFAULT, LOCALE_SUPPORTED.
+# Secrets: CLOUDFLARE_API_TOKEN (Cloudflare Pages: Edit), CLOUDFLARE_ACCOUNT_ID. See docs/DEPLOY.md.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-cloudflare
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: vars.DEPLOY_CLOUDFLARE == 'true'
+    runs-on: ubuntu-latest
+    env:
+      LOCALE_DEFAULT: ${{ vars.LOCALE_DEFAULT || 'en' }}
+      LOCALE_SUPPORTED: ${{ vars.LOCALE_SUPPORTED || 'en,bn' }}
+      SITE_URL: ${{ vars.SITE_URL || 'http://127.0.0.1:28390' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.3
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - name: Static export (validates the data first)
+        run: STATIC_EXPORT=1 pnpm build
+      - run: test -f out/index.html
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PROJECT: ${{ vars.CLOUDFLARE_PROJECT }}
+        run: npx --yes wrangler@4 pages deploy out --project-name="$CLOUDFLARE_PROJECT" --branch=main
