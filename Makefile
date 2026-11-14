@@ -89,7 +89,7 @@ check: env
 	@$(call quiet,$(COMPOSE) --profile preview run --rm --no-deps nginx nginx -t)
 	@$(MAKE) --no-print-directory versions | tail -n 1
 	@node scripts/validate-data.js
-	@$(call quiet,node --test scripts/)
+	@$(call quiet,node --test scripts/*.test.js)
 	@$(MAKE) --no-print-directory typecheck
 	@$(MAKE) --no-print-directory audit
 	@$(MAKE) --no-print-directory scan

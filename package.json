@@ -10,7 +10,7 @@
     "dev": "node scripts/images.js && next dev --hostname 0.0.0.0 --port ${LITE_DEV_PORT:-28310}",
     "images": "node scripts/images.js",
     "validate": "node scripts/validate-data.js",
-    "test:data": "node --test scripts/",
+    "test:data": "node --test scripts/*.test.js",
     "build": "node scripts/validate-data.js && node scripts/images.js && next build",
     "typecheck": "node scripts/images.js && tsc --noEmit"
   },
