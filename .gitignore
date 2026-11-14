@@ -7,7 +7,6 @@ Thumbs.db
 
 # Dependencies / build
 node_modules/
-vendor/
 .next/
 dist/
 coverage/
@@ -19,13 +18,9 @@ coverage/
 !*.example
 
 # Runtime data
-uploads/
-storage/app/uploads/
 *.log
 logs/
 .cache/
-.phpunit.cache/
-.phpunit.result.cache
 .eslintcache
 *.tsbuildinfo
 
@@ -33,5 +28,3 @@ logs/
 .claude/settings.local.json
 next-env.d.ts
 
-# Backups (scripts/backup.sh) and production env
-backups/

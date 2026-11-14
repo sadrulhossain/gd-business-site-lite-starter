@@ -1,6 +1,5 @@
 // Fails when an installed or pinned version is below the floor in docs/VERSIONS.md.
-// Sources: .env *_VERSION pins (images), api/composer.lock (PHP packages), pnpm-lock.yaml (JS packages).
-// The floors themselves are re-verified against advisories by hand each phase (see docs/SECURITY.md).
+// Sources: .env *_VERSION pins (images), pnpm-lock.yaml (JS packages).
 import { readFileSync, existsSync } from 'node:fs'
 
 const rows = readFileSync('docs/VERSIONS.md', 'utf8')
@@ -19,17 +18,13 @@ const cmp = (a, b) => {
 
 const checks = []
 const env = existsSync('.env') ? readFileSync('.env', 'utf8') : readFileSync('.env.example', 'utf8')
-for (const [key, row] of Object.entries({ PHP_VERSION: /^PHP$/, NODE_VERSION: /^Node/, NGINX_VERSION: /^nginx/, MARIADB_VERSION: /^MariaDB/, MAILPIT_VERSION: /^Mailpit/, COMPOSER_VERSION: /^Composer/ })) {
+for (const [key, row] of Object.entries({ NODE_VERSION: /^Node/, NGINX_VERSION: /^nginx/ })) {
   const v = env.match(new RegExp(`^${key}=(.+)$`, 'm'))?.[1]
   if (v) checks.push([key, v, floorOf(row)])
 }
 
-const lock = JSON.parse(readFileSync('api/composer.lock', 'utf8'))
-const php = { 'laravel/framework': /^Laravel/, 'laravel/passport': /passport/, 'spatie/laravel-permission': /spatie/, 'ezyang/htmlpurifier': /htmlpurifier/, 'phpseclib/phpseclib': /phpseclib/, 'dedoc/scramble': /scramble/ }
-for (const p of [...lock.packages, ...lock['packages-dev']]) if (php[p.name]) checks.push([p.name, p.version, floorOf(php[p.name])])
-
-const pnpm = readFileSync('pnpm-lock.yaml', 'utf8')
-const js = { next: /^Next/, vite: /^Vite/, react: /^React/, 'react-dom': /^React/, tailwindcss: /^tailwindcss$/, postcss: /^postcss$/, typescript: /^typescript$/, '@tiptap/react': /tiptap\/react/, '@tiptap/starter-kit': /starter-kit/ }
+const pnpm = existsSync('pnpm-lock.yaml') ? readFileSync('pnpm-lock.yaml', 'utf8') : ''
+const js = { next: /^Next/, react: /^React/, 'react-dom': /^React/, tailwindcss: /^tailwindcss$/, postcss: /^postcss$/, typescript: /^typescript$/ }
 const installed = new Map()
 for (const line of pnpm.split(/\r?\n/)) {
   const m = /^ {2}'?(.+?)@(\d+\.\d+\.\d+)'?:$/.exec(line)

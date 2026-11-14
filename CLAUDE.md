@@ -1,28 +1,35 @@
-# gd-business-site-boilerplate
+# gd-business-site-lite-starter
 
-## Repo map
-- `api/` — Laravel API (PHP 8.5, MariaDB; cache, sessions and queue use the database)
-- `web/admin` — Next.js admin app
-- `web/portal` — Next.js public portal
-- `packages/` — shared packages
-- `docker/` — Dockerfiles and compose config
-- `docs/` — PHASES.md, VERSIONS.md, ENV.md, DECISIONS.md, PATTERNS.md
+Lite business site starter: one Next.js site at the repo root, no backend, no database. Cloned from
+gd-business-site-boilerplate (see docs/SYNC.md).
 
-## Make commands
-- `make up` / `make down` — start (builds, waits for healthy) / stop the stack
-- `make ports` — check host ports from .env are free or ours
-- `make versions` — check .env *_VERSION pins against docs/VERSIONS.md
-- `make t FILTER=...` — targeted Pest tests inside the php container
-- `make check` — compose config, script syntax, nginx -t, Pint, Larastan, Pest, composer audit, version pins (run once, at the end of a phase; needs the stack up)
+## Stack
+- Node 24 (patched tag), Next.js 16 App Router, React 19, Tailwind 4, TypeScript, pnpm (single package, no workspace)
+- sharp and Zod are pinned in docs/VERSIONS.md for later phases; not installed yet
+- nginx 1.30 preview in front of the dev server; Playwright for browser tests
+
+## Layout
+- `src/app`, `src/components`, `src/lib`, `src/messages`, `src/styles` (theme tokens), `src/proxy.ts`
+- `public/`, `e2e/`, `docker/` (node dev script, nginx preview), `scripts/`, `docs/`
+
+## Docker and env
+- Containers: `gd-business-site-lite-starter-<tech>` (node, nginx, e2e), via COMPOSE_PROJECT_NAME
+- Root `.env` (from `.env.example`) holds Docker and shared settings only; no app secrets in it beyond placeholders
+- Ports, env-configured: LITE_DEV_PORT=28310 (Next dev, internal), LITE_PREVIEW_PORT=28390 (nginx preview, published)
+
+## Make
+- `make up` / `make down`, `make ports`, `make versions`, `make web` (install, typecheck, build), `make check`, `make e2e`
 
 ## Rules
-1) One phase at a time; read only CLAUDE.md, the phase row and files it names.
-2) No repo-wide exploring, no unrelated refactors, no dependency not in VERSIONS.md.
-3) Reuse the reference patterns in docs/PATTERNS.md; do not invent new ones.
-4) While working run only targeted tests (make t FILTER=...); run make check once at the end.
-5) Keep command output short (quiet flags, | tail -n 20). Never paste logs back.
-6) No screenshots unless the phase says so.
-7) Finish: tick the phase, git commit "phase N: title", reply in 8 lines or fewer
-   (done, deviations, decisions I must make), then STOP and wait for approval.
-8) Commits and PRs: never add a Claude signature, Co-Authored-By trailer, "Generated with" line
-   or any other Claude attribution to commit messages, PR descriptions, code or docs. Anywhere.
+1) One phase at a time; read only this file, the phase row in docs/PHASES.md and the files it names.
+2) No repo-wide exploring, no unrelated refactors, no dependency not listed in docs/VERSIONS.md.
+3) Token saving: use quiet flags and `| tail -n 20`; never paste logs back; no screenshots unless the phase says so.
+4) Run targeted checks while working; run `make check` once at the end of a phase.
+5) Sync with the template only by copying theme tokens and shared components (docs/SYNC.md).
+6) Finish: tick the phase in docs/PHASES.md, commit, reply in 8 lines or fewer (done, deviations, decisions needed),
+   then STOP and wait for approval.
+
+## Commits
+- Plain messages: `phase LN: title` (for example `phase L0: clone and trim`).
+- Never add any Claude signature, Co-Authored-By trailer, "Generated with" line, session link or attribution to
+  commit messages, PR text, code, comments or files.
