@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import type { Settings } from './content'
+import { getContent, type Settings } from './content'
 import { defaultLocale, localePath, locales } from './i18n'
 
 /** Public origin of the portal, for canonical URLs, Open Graph, the sitemap and JSON-LD. Set SITE_URL in production. */
@@ -34,7 +34,9 @@ interface PageMeta {
  * `title` is the page's own part; the layout's template appends the site name. Without it the layout default applies.
  */
 export function pageMetadata({ locale, path, siteName, title, description, image, type = 'website', publishedTime, modifiedTime }: PageMeta): Metadata {
-  const text = description?.trim().slice(0, 200) || undefined
+  const { seo } = getContent(locale).settings
+  const text = (description?.trim() || seo.description).slice(0, 200) || undefined
+  const picture = image ?? seo.og_image
 
   return {
     ...(title ? { title } : {}),
@@ -44,13 +46,13 @@ export function pageMetadata({ locale, path, siteName, title, description, image
       type,
       siteName,
       locale,
-      title: title ?? siteName,
+      title: title ?? seo.title,
       description: text,
       url: localePath(locale, path),
-      images: image ? [{ url: image }] : undefined,
+      images: picture ? [{ url: picture }] : undefined,
       ...(type === 'article' ? { publishedTime: publishedTime ?? undefined, modifiedTime: modifiedTime ?? undefined } : {}),
     },
-    twitter: { card: image ? 'summary_large_image' : 'summary', title: title ?? siteName, description: text, images: image ? [image] : undefined },
+    twitter: { card: picture ? 'summary_large_image' : 'summary', title: title ?? siteName, description: text, images: picture ? [picture] : undefined },
   }
 }
 
@@ -64,7 +66,7 @@ const DAY_IRI: Record<string, string> = {
   sun: 'Sunday',
 }
 
-/** schema.org LocalBusiness from public settings; empty fields are left out. */
+/** schema.org LocalBusiness from settings.js; empty fields are left out. */
 export function localBusinessJsonLd(settings: Settings, locale: string): Record<string, unknown> {
   const opening = Object.entries(settings.hours ?? {})
     .filter(([day, entry]) => DAY_IRI[day] && !entry.closed && entry.open && entry.close)
@@ -77,6 +79,10 @@ export function localBusinessJsonLd(settings: Settings, locale: string): Record<
     name: settings.site_name,
     description: settings.tagline,
     url: absolute(localePath(locale)),
+    inLanguage: locale,
+    logo: settings.logo ? absolute(settings.logo) : undefined,
+    image: settings.seo.og_image ? absolute(settings.seo.og_image) : undefined,
+    hasMap: settings.map_url,
     telephone: settings.phone,
     email: settings.email,
     address: settings.address ? { '@type': 'PostalAddress', streetAddress: settings.address } : undefined,
