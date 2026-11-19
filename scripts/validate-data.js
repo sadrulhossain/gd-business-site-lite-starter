@@ -3,11 +3,12 @@
 import { existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { schemas } from '../src/data/schema.js'
+import { pricingProblems, schemas } from '../src/data/schema.js'
 
 const dir = resolve(process.argv[2] ?? fileURLToPath(new URL('../src/data', import.meta.url)))
 const images = fileURLToPath(new URL('../content/images', import.meta.url))
 const problems = []
+const loaded = {}
 
 // Every image reference (a file name) must exist in content/images.
 function checkImages(value, where) {
@@ -28,12 +29,16 @@ for (const [name, schema] of Object.entries(schemas)) {
   }
 
   const value = (await import(pathToFileURL(file).href)).default
+  loaded[name] = value
   checkImages(value, name)
   const result = schema.safeParse(value)
   if (!result.success) {
     for (const issue of result.error.issues) problems.push(`${[name, ...issue.path].join('.')}: ${issue.message}`)
   }
 }
+
+// A plan must name an existing service (checked once every file has parsed).
+if (problems.length === 0) problems.push(...pricingProblems(loaded))
 
 if (problems.length) {
   console.error(`data: ${problems.length} problem(s) in ${dir}`)

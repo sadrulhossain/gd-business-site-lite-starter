@@ -6,12 +6,13 @@ import { parseContent } from './schema.js'
 import faqs from './faqs.js'
 import gallery from './gallery.js'
 import sections from './sections.js'
+import pricing from './pricing.js'
 import services from './services.js'
 import settings from './settings.js'
 import team from './team.js'
 import testimonials from './testimonials.js'
 
-const data = parseContent({ settings, sections, services, faqs, testimonials, team, gallery })
+const data = parseContent({ settings, sections, services, pricing, faqs, testimonials, team, gallery })
 
 /**
  * Picks `x_2nd` over `x` for the second locale when it is non-empty; otherwise the default text stays. `_2nd` keys are dropped.
@@ -95,6 +96,7 @@ export function getContent(locale) {
       .filter((s) => s.is_visible)
       .sort((a, b) => a.sort_order - b.sort_order),
     services: l.services.map((s, i) => ({ id: i + 1, slug: s.slug, title: s.title, description: s.description ?? null, image: media(s.image) })),
+    pricing: l.pricing.map((p, i) => ({ id: i + 1, service: p.service, title: p.title, price: p.price, unit: p.unit ?? null, description: p.description ?? null, features: p.features.map((f) => f.text), featured: p.featured })),
     testimonials: l.testimonials.map((t, i) => ({ id: i + 1, author_name: t.author_name, author_role: t.author_role ?? null, quote: t.quote, image: media(t.image) })),
     team: l.team.map((m, i) => ({ id: i + 1, name: m.name, role: m.role, bio: m.bio ?? null, image: media(m.image) })),
     gallery: l.gallery.map((g, i) => ({ id: i + 1, title: g.title ?? null, caption: g.caption ?? null, image: media(g.image) })),

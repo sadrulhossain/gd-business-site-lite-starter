@@ -11,7 +11,7 @@ const hhmm = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'use HH:MM')
 /** `name` and `name_2nd`: the default-language text and its optional second-language text. */
 const tr = (name, required = true) => ({ [name]: required ? text : optionalText, [`${name}_2nd`]: optionalText })
 
-export const SECTION_KEYS = ['hero', 'about', 'services', 'testimonials', 'gallery', 'faq', 'team', 'contact']
+export const SECTION_KEYS = ['hero', 'about', 'services', 'pricing', 'testimonials', 'gallery', 'faq', 'team', 'contact']
 export const SOCIAL_NETWORKS = ['facebook', 'instagram', 'x', 'linkedin', 'youtube', 'tiktok']
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
@@ -44,6 +44,19 @@ export const servicesSchema = z
   .array(z.strictObject({ slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'lower-case words joined by -'), ...tr('title'), ...tr('description', false), image: imagePath.nullable() }))
   .refine((rows) => new Set(rows.map((r) => r.slug)).size === rows.length, 'duplicate service slug')
 
+// One plan of one service. `features` is a list of `{ text, text_2nd }`.
+export const pricingSchema = z.array(
+  z.strictObject({
+    service: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'the slug of a service in services.js'),
+    ...tr('title'),
+    ...tr('price'),
+    ...tr('unit', false),
+    ...tr('description', false),
+    features: z.array(z.strictObject(tr('text'))),
+    featured: z.boolean(),
+  }),
+)
+
 export const faqsSchema = z.array(z.strictObject({ ...tr('question'), ...tr('answer') }))
 
 export const testimonialsSchema = z.array(z.strictObject({ author_name: text, ...tr('author_role', false), ...tr('quote'), image: imagePath.nullable() }))
@@ -57,6 +70,7 @@ export const schemas = {
   settings: settingsSchema,
   sections: sectionsSchema,
   services: servicesSchema,
+  pricing: pricingSchema,
   faqs: faqsSchema,
   testimonials: testimonialsSchema,
   team: teamSchema,
@@ -65,13 +79,25 @@ export const schemas = {
 
 /** Parses `{ settings, sections, ... }`; returns the parsed content or throws a ZodError naming every bad path. */
 export function parseContent(raw) {
-  return z.strictObject(schemas).parse(raw)
+  const data = z.strictObject(schemas).parse(raw)
+  const problems = pricingProblems(data)
+  if (problems.length) throw new Error(`data: ${problems.join('; ')}`)
+
+  return data
+}
+
+/** Every plan must belong to an existing service. Returns the problems as `pricing.<n>.service: ...`. */
+export function pricingProblems({ services, pricing }) {
+  const slugs = new Set((services ?? []).map((s) => s.slug))
+
+  return (pricing ?? []).flatMap((plan, i) => (slugs.has(plan.service) ? [] : [`pricing.${i}.service: no service "${plan.service}" in services.js`]))
 }
 
 /** Like parseContent, but returns `{ data }` or `{ errors: ['settings.site_name: ...'] }`. */
 export function checkContent(raw) {
   const result = z.object(schemas).safeParse(raw)
-  if (result.success) return { data: result.data }
+  if (!result.success) return { errors: result.error.issues.map((i) => `${i.path.join('.') || '(root)'}: ${i.message}`) }
+  const errors = pricingProblems(result.data)
 
-  return { errors: result.error.issues.map((i) => `${i.path.join('.') || '(root)'}: ${i.message}`) }
+  return errors.length ? { errors } : { data: result.data }
 }

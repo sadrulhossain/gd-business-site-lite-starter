@@ -5,6 +5,7 @@ import type { ReactElement } from 'react'
 import { HoursList } from '../components/HoursList'
 import { JsonLd } from '../components/JsonLd'
 import { Img } from '../components/Img'
+import { PricingPlans } from '../components/PricingPlans'
 import { SectionBlock, SectionRenderer } from '../components/sections'
 import { contactMethods, mapHref } from './contact'
 import { getContent, SECTION_PAGES } from './content'
@@ -163,9 +164,12 @@ export const serviceDetail: Screen<{ slug: string }> = {
     return pageMetadata({ locale, path: `/services/${service.slug}`, siteName: content.settings.site_name, title: service.title, description: service.description, image: service.image?.url })
   },
   Page: ({ locale, extra: { slug } }) => {
-    const service = getContent(locale).services.find((s) => s.slug === slug)
+    const { services, sections, pricing } = getContent(locale)
+    const service = services.find((s) => s.slug === slug)
     if (!service) notFound()
     const messages = getMessages(locale)
+    // Pricing shows only while the pricing section is visible.
+    const plans = sections.some((s) => s.key === 'pricing') ? pricing.filter((p) => p.service === service.slug) : []
 
     return (
       <article className="mx-auto max-w-4xl px-4 py-14">
@@ -177,6 +181,14 @@ export const serviceDetail: Screen<{ slug: string }> = {
           {service.image && <Img image={service.image} alt={service.title} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[4/3] w-full rounded-lg object-cover" />}
           {service.description && <p className="text-lg whitespace-pre-line text-ink-muted">{service.description}</p>}
         </div>
+        {plans.length > 0 && (
+          <section aria-labelledby="service-pricing" className="mt-14">
+            <h2 id="service-pricing" className="mb-6 text-2xl font-bold tracking-tight">
+              {messages.pages.pricing}
+            </h2>
+            <PricingPlans plans={plans} messages={messages} />
+          </section>
+        )}
       </article>
     )
   },

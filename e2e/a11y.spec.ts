@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
 // WCAG 2.1 A/AA scan of every public page in both languages, against the nginx preview of ./out (no screenshots).
-const paths = ['/', '/about/', '/services/', '/services/daily-bread/', '/gallery/', '/faq/', '/contact/', '/privacy/', '/terms/', '/missing-page/']
+const paths = ['/', '/about/', '/services/', '/pricing/', '/services/daily-bread/', '/gallery/', '/faq/', '/contact/', '/privacy/', '/terms/', '/missing-page/']
 const tags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']
 
 const summary = (violations: Awaited<ReturnType<AxeBuilder['analyze']>>['violations']) =>

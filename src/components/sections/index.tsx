@@ -5,6 +5,7 @@ import { contactMethods } from '../../lib/contact'
 import { localePath, type Messages } from '../../lib/i18n'
 import { GalleryGrid } from '../GalleryGrid'
 import { Img } from '../Img'
+import { PricingPlans } from '../PricingPlans'
 
 interface Ctx {
   locale: string
@@ -155,6 +156,42 @@ const Services: SectionView = async ({ section, locale, messages, page }) => {
             </li>
           ))}
         </ul>
+      )}
+    </Frame>
+  )
+}
+
+/** Home: heading, intro and a button to the pricing page. The page itself lists the plans service by service. */
+const Pricing: SectionView = async ({ section, locale, messages, page }) => {
+  const { pricing, services } = getContent(locale)
+  const groups = services.map((s) => ({ service: s, plans: pricing.filter((p) => p.service === s.slug) })).filter((g) => g.plans.length > 0)
+
+  return (
+    <Frame section={section} page={page} tint>
+      {page ? (
+        groups.length === 0 ? (
+          <p className="text-center text-ink-muted">{messages.sections.empty}</p>
+        ) : (
+          <div className="space-y-14">
+            {groups.map(({ service, plans }) => (
+              <div key={service.slug}>
+                <h2 className="mb-6 text-2xl font-bold tracking-tight">
+                  <Link prefetch={false} href={localePath(locale, `/services/${service.slug}`)} className="hover:text-brand-700">
+                    {service.title}
+                  </Link>
+                </h2>
+                <PricingPlans plans={plans} messages={messages} />
+              </div>
+            ))}
+          </div>
+        )
+      ) : (
+        <p className="text-center">
+          <Link prefetch={false} href={localePath(locale, '/pricing')} className={btnPrimary}>
+            {messages.sections.seePricing}
+            <Arrow />
+          </Link>
+        </p>
       )}
     </Frame>
   )
@@ -311,6 +348,7 @@ const views: Record<string, SectionView> = {
   hero: Hero,
   about: About,
   services: Services,
+  pricing: Pricing,
   testimonials: Testimonials,
   gallery: Gallery,
   faq: Faqs,
