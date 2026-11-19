@@ -8,6 +8,6 @@ First release: a static, two-language business site starter cut from gd-business
 - Home, about, services (list and detail), gallery with lightbox, FAQ, contact, privacy and terms; hidden sections generate no page.
 - Default language at the root, optional second language under its own path, hreflang, sitemap, robots, LocalBusiness JSON-LD, 404.
 - Image pipeline: sharp to WebP at 480/960/1600 with srcset.
-- Docker: dev server, build, nginx preview; `make` targets for build, checks, audit, Trivy scan, Playwright, axe and Lighthouse.
+- Docker: dev server, build, nginx preview; compose services for build, checks, audit, Trivy scan, Playwright, axe and Lighthouse.
 - GitHub Actions: check on push, packaged site on tag. Host files: `_headers` and `.htaccess`.
 - Docs: customize, deploy, client handover, upgrade, versions, template sync.

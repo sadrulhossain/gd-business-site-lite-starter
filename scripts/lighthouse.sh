@@ -1,5 +1,5 @@
 #!/bin/sh
-# Lighthouse (performance >= 95, SEO = 100) on key pages of the preview. Runs inside the e2e service (`make lighthouse`):
+# Lighthouse (performance >= 95, SEO = 100) on key pages of the preview. Runs inside the e2e service (`docker compose --profile e2e run --rm --no-deps e2e sh scripts/lighthouse.sh`):
 # it has Chromium and reaches nginx by name. Lighthouse itself is a pinned tool, not a dependency (docs/VERSIONS.md).
 set -eu
 cd /app

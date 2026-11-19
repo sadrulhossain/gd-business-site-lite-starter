@@ -37,7 +37,7 @@ services:
       retries: 60
       start_period: 120s
 
-  # make build: `docker compose run --rm build`. Output: ./out
+  # build: `docker compose run --rm build`. Output: ./out
   build:
     <<: *node
     container_name: ${COMPOSE_PROJECT_NAME}-build
@@ -53,7 +53,7 @@ services:
       - LOCALE_SUPPORTED=${LOCALE_SUPPORTED}
       - SITE_URL=${SITE_URL:-http://127.0.0.1:${LITE_PREVIEW_PORT}}
 
-  # make e2e / make lighthouse: browser tests and Lighthouse against the preview (the nginx service must be up).
+  # e2e / lighthouse: browser tests and Lighthouse against the preview (the nginx service must be up).
   e2e:
     image: mcr.microsoft.com/playwright:v1.65.0-noble
     container_name: ${COMPOSE_PROJECT_NAME}-e2e
@@ -66,7 +66,7 @@ services:
       - .:/app
       - root-node-modules:/app/node_modules
 
-  # make preview: serves ./out (clean URLs, 404.html).
+  # preview: serves ./out (clean URLs, 404.html).
   nginx:
     image: ${COMPOSE_PROJECT_NAME}-nginx:${NGINX_VERSION}
     build:

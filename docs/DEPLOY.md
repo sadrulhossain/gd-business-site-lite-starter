@@ -1,6 +1,6 @@
 # Deploy
 
-The site is the folder `./out`. Build it with `make build` (or `STATIC_EXPORT=1 pnpm build`) and upload its contents.
+The site is the folder `./out`. Build it with `docker compose run --rm --no-deps build` (or `STATIC_EXPORT=1 pnpm build`) and upload its contents.
 
 Before building for production, set in `.env` (or the host's build settings):
 - `SITE_URL=https://www.example.com` (canonical URLs, sitemap, social cards; no trailing slash)
@@ -10,7 +10,7 @@ Every host needs the same four things, which the files in `public/` already prov
 `about/index.html`), the exported `404.html` for unknown paths, security headers, and long caching for `/_next/static/`.
 
 ## Shared hosting (Apache, cPanel)
-1. `make build`. `out/.htaccess` is included (clean URLs, 404, compression, headers).
+1. `docker compose run --rm --no-deps build`. `out/.htaccess` is included (clean URLs, 404, compression, headers).
 2. Upload the contents of `out/` (not the folder itself) to the web root, `public_html` for example.
 3. Needs `mod_headers`, `mod_deflate`, `mod_expires` and `AllowOverride All` (default on most hosts). Visit `/about` (no slash): it should redirect to `/about/`.
 

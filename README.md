@@ -5,18 +5,22 @@ produces plain files in `./out` that any static host can serve. English plus an 
 
 ## Quick start (Docker, no local Node needed)
 ```sh
-make up        # dev server with live reload: http://127.0.0.1:28310
-make build     # validate data, optimise images, static export into ./out
-make preview   # nginx on ./out: http://127.0.0.1:28390
-make down      # stop everything
+cp .env.example .env                                   # first time only, change the placeholders
+docker compose up -d --build node                      # dev server with live reload: http://127.0.0.1:28310
+docker compose run --rm --no-deps build                # validate data, optimise images, static export into ./out
+docker compose --profile preview up -d --build nginx   # nginx on ./out: http://127.0.0.1:28390
+docker compose --profile build --profile preview --profile e2e down --remove-orphans   # stop everything
 ```
-`make up` creates `.env` from `.env.example` on first run. Without `make`: `docker compose up -d node`, and
-`docker compose run --rm --no-deps build`.
 
 ## Edit and ship
 1. Change the content in `src/data/` and put pictures in `content/images/` ([docs/CUSTOMIZE.md](docs/CUSTOMIZE.md)).
-2. `make build`, then upload `./out` ([docs/DEPLOY.md](docs/DEPLOY.md)).
-3. `make check` runs every check (data, types, audit, image scan, browser, accessibility, Lighthouse).
+2. `docker compose run --rm --no-deps build`, then upload `./out` ([docs/DEPLOY.md](docs/DEPLOY.md)).
+3. Checks (browser tests need the preview up):
+   - data and scripts: `node scripts/validate-data.js`, `node --test scripts/*.test.js`, `node scripts/check-floors.mjs`
+   - types and audit: `docker compose run --rm --no-deps node sh -c 'corepack enable && pnpm install --frozen-lockfile && pnpm typecheck'` (same pattern for `pnpm audit --prod`)
+   - browser and accessibility: `docker compose --profile e2e run --rm --no-deps e2e npx playwright test`
+   - Lighthouse: `docker compose --profile e2e run --rm --no-deps e2e sh scripts/lighthouse.sh`
+   - image scan: Trivy (version pinned in `.env`) on the node and nginx images
 
 ## Docs
 [CUSTOMIZE](docs/CUSTOMIZE.md) · [DEPLOY](docs/DEPLOY.md) · [CLIENT_HANDOVER](docs/CLIENT_HANDOVER.md) ·

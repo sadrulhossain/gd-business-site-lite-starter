@@ -1,5 +1,5 @@
 // Validates src/data/*.js against src/data/schema.js. Usage: node scripts/validate-data.js [dir]
-// Runs in `make check` and before `pnpm build`; exits 1 and lists every bad path when the data is invalid.
+// Runs before `pnpm build`; exits 1 and lists every bad path when the data is invalid.
 import { existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
