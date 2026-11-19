@@ -19,14 +19,14 @@ gd-business-site-boilerplate (see docs/SYNC.md).
 - Root `.env` (from `.env.example`) holds Docker and shared settings only; no app secrets in it beyond placeholders
 - Ports, env-configured: LITE_DEV_PORT=28310 (Next dev), LITE_PREVIEW_PORT=28390 (nginx preview of ./out); both bound to 127.0.0.1
 
-## Make
-- `make up` (dev server) / `make down`, `make ports`, `make build` (images + static export to ./out), `make preview` (nginx on ./out), `make versions`, `make typecheck`, `make audit`, `make scan` (Trivy), `make e2e` and `make lighthouse` (need the preview up), `make check` (all of it)
+## Commands (docker compose, no Makefile; see README)
+- Dev server: `docker compose up -d --build node`; build: `docker compose run --rm --no-deps build`; preview: `docker compose --profile preview up -d --build nginx`; e2e and Lighthouse via the `e2e` profile (preview up); other checks listed in README
 
 ## Rules
 1) One phase at a time; read only this file, the phase row in docs/PHASES.md and the files it names.
 2) No repo-wide exploring, no unrelated refactors, no dependency not listed in docs/VERSIONS.md.
 3) Token saving: use quiet flags and `| tail -n 20`; never paste logs back; no screenshots unless the phase says so.
-4) Run targeted checks while working; run `make check` once at the end of a phase.
+4) Run targeted checks while working; run every README check once at the end of a phase.
 5) Sync with the template only by copying theme tokens and shared components (docs/SYNC.md).
 6) Finish: tick the phase in docs/PHASES.md, commit, reply in 8 lines or fewer (done, deviations, decisions needed),
    then STOP and wait for approval.

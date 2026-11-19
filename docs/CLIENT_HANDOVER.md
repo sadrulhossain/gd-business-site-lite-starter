@@ -15,7 +15,7 @@ Text and pictures change by editing a few content files and uploading the result
 | Pictures | `content/images/` (jpg or png) | rebuild and upload |
 | Colours | `src/styles/portal.css` | rebuild and upload |
 
-Rebuild: `make build`. Upload the contents of the `out` folder to the host (see DEPLOY.md). A mistake in the content
+Rebuild: `docker compose run --rm --no-deps build`. Upload the contents of the `out` folder to the host (see DEPLOY.md). A mistake in the content
 files stops the build with a message saying which file and field, so nothing broken is published.
 
 ## Accounts and access (fill in)
@@ -30,7 +30,7 @@ If you need editing without code, a form or a blog, ask about moving to the full
 
 ## Care
 - Renew the domain and hosting yearly.
-- Once a quarter: rebuild with `make build` (picks up security fixes) and run `make check`.
+- Once a quarter: rebuild with `docker compose run --rm --no-deps build` (picks up security fixes) and re-run the checks in the README.
 - Keep original photos; the site makes its own web sizes.
 
 ## Support

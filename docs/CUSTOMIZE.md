@@ -1,7 +1,7 @@
 # Customize
 
 Everything a client sees comes from `src/data/*.js`, `content/images/` and the theme tokens. The build fails with a
-readable message if the data is invalid (`pnpm validate`, or `make build`).
+readable message if the data is invalid (`pnpm validate`, or the docker build).
 
 ## Edit the content (`src/data/`)
 | File | What it holds |
@@ -34,7 +34,7 @@ Every translatable field has a default key and a `_2nd` key (`title`, `title_2nd
 
 ## Images
 Put originals (jpg or png) in `content/images/` and refer to them by file name (`image: 'hero.jpg'`). `scripts/images.js` writes
-WebP at 480, 960 and 1600 px into `public/images/` and a manifest; `make build` runs it. Render pictures only with
+WebP at 480, 960 and 1600 px into `public/images/` and a manifest; the build runs it. Render pictures only with
 `src/components/Img.tsx`, never `next/image`, which does not work in a static export.
 Keep originals under about 2 MB and wide enough for the largest use (1600 px for a hero).
 
