@@ -43,6 +43,18 @@ export interface Service {
   image: Media | null
 }
 
+export interface PricingPlan {
+  id: number
+  /** Slug of the service the plan belongs to. */
+  service: string
+  title: string
+  price: string
+  unit: string | null
+  description: string | null
+  features: string[]
+  featured: boolean
+}
+
 export interface Testimonial {
   id: number
   author_name: string
@@ -77,6 +89,7 @@ export interface Content {
   /** Visible sections in display order. */
   sections: Section[]
   services: Service[]
+  pricing: PricingPlan[]
   testimonials: Testimonial[]
   team: TeamMember[]
   gallery: GalleryItem[]
@@ -84,6 +97,6 @@ export interface Content {
 }
 
 /** Section keys that have a page of their own, and where it lives. The header links here instead of to a Home anchor. */
-export const SECTION_PAGES: Record<string, string> = { about: '/about', services: '/services', gallery: '/gallery', faq: '/faq' }
+export const SECTION_PAGES: Record<string, string> = { about: '/about', services: '/services', pricing: '/pricing', gallery: '/gallery', faq: '/faq' }
 
 export { getContent } from '../data/index.js'

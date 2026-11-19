@@ -9,6 +9,7 @@ readable message if the data is invalid (`pnpm validate`, or the docker build).
 | `settings.js` | Business name, tagline, hours, address, phone, WhatsApp, email, socials, map link, SEO defaults, and which contact methods to show (`contact` flags) |
 | `sections.js` | The home page blocks: `key`, `visible`, `order`, heading, text, image |
 | `services.js` | Services. `slug` is the page address (`/services/<slug>/`) |
+| `pricing.js` | Plans per service (`service` is a slug from `services.js`). Shown on `/pricing/` and on that service's page; hide the `pricing` section in `sections.js` to remove both |
 | `faqs.js`, `testimonials.js`, `team.js`, `gallery.js` | Lists shown by their sections |
 
 Set `visible: false` to hide a section; a hidden section has no block, no nav link and no page. Change `order` to move one.

@@ -37,12 +37,15 @@
     "visit": "Visit",
     "details": "Details",
     "whatsapp": "WhatsApp",
+    "seePricing": "See pricing",
+    "popular": "Popular",
     "close": "Close",
     "open": "View larger image"
   },
   "pages": {
     "about": "About us",
     "services": "Services",
+    "pricing": "Pricing",
     "gallery": "Gallery",
     "faq": "FAQ",
     "privacy": "Privacy policy",

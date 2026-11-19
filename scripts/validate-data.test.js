@@ -20,3 +20,10 @@ test('a bad fixture fails and names the bad paths', () => {
   assert.match(result.stderr, /sections: duplicate section key/)
   assert.match(result.stderr, /services: missing file services\.js/)
 })
+
+test('a plan for an unknown service is reported', async () => {
+  const { pricingProblems } = await import('../src/data/schema.js')
+  const services = [{ slug: 'catering' }]
+  assert.deepEqual(pricingProblems({ services, pricing: [{ service: 'catering' }] }), [])
+  assert.deepEqual(pricingProblems({ services, pricing: [{ service: 'catering' }, { service: 'cakes' }] }), ['pricing.1.service: no service "cakes" in services.js'])
+})
