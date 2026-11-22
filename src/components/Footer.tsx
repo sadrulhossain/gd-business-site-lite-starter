@@ -66,7 +66,7 @@ export function Footer({ locale, settings, messages }: { locale: string; setting
       <div className="relative border-t border-white/10 px-4 py-5">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 text-sm text-white/65 sm:flex-row">
           <p>
-            © {new Date().getFullYear()} {settings.site_name}. {messages.footer.rights}
+            © {new Date().getFullYear()} {settings.site_name}. {messages.footer.rights} {messages.footer.poweredBy} Orvyx Technologies
           </p>
           <nav aria-label={messages.footer.legal} className="flex gap-5">
             <Link prefetch={false} href={localePath(locale, '/privacy')} className={link}>
