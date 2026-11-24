@@ -11,9 +11,7 @@ const SOCIAL: Record<string, string> = { facebook: 'Facebook', instagram: 'Insta
 /** Dark footer: brand, contact with social links, important links and services, all from public settings. */
 export function Footer({ locale, settings, sections, messages }: { locale: string; settings: Settings; sections: Section[]; messages: Messages }) {
   const social = Object.entries(settings.social_links ?? {}).filter(([, url]) => url)
-  // One number only: WhatsApp is shown when there is no phone link.
-  const all = contactMethods(settings, messages.sections)
-  const methods = all.filter((m) => m.key !== 'whatsapp' || !all.some((x) => x.key === 'call'))
+  const methods = contactMethods(settings, messages.sections)
   const pages = navItems(locale, sections, messages, { contact: true })
   const services = getContent(locale).services.slice(0, 6)
   const heading = 'text-sm font-semibold tracking-widest text-accent-400 uppercase'

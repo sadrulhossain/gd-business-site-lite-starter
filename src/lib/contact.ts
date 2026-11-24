@@ -8,11 +8,11 @@ export interface ContactMethod {
   href: string
 }
 
-/** Call, WhatsApp and email links, each only when its flag in settings.js is on and its value is set. */
+/** Call, WhatsApp and email links, each only when its flag in settings.js is on and its value is set. One number only: WhatsApp is listed when there is no call link. */
 export function contactMethods(settings: Settings, labels: { call: string; whatsapp: string; email: string }): ContactMethod[] {
   const methods: ContactMethod[] = []
   if (settings.contact.call && settings.phone) methods.push({ key: 'call', label: labels.call, text: settings.phone, href: `tel:${settings.phone.replace(/\s+/g, '')}` })
-  if (settings.contact.whatsapp && settings.whatsapp) methods.push({ key: 'whatsapp', label: labels.whatsapp, text: `+${settings.whatsapp}`, href: `https://wa.me/${settings.whatsapp}` })
+  if (settings.contact.whatsapp && settings.whatsapp && methods.length === 0) methods.push({ key: 'whatsapp', label: labels.whatsapp, text: `+${settings.whatsapp}`, href: `https://wa.me/${settings.whatsapp}` })
   if (settings.contact.email && settings.email) methods.push({ key: 'email', label: labels.email, text: settings.email, href: `mailto:${settings.email}` })
 
   return methods

@@ -134,7 +134,7 @@ const Services: SectionView = async ({ section, locale, messages, page }) => {
       ) : (
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((s, i) => (
-            <li key={s.id} className={`${card} group flex flex-col`}>
+            <li key={s.id} className={`${card} group flex flex-col items-center text-center`}>
               {s.image ? (
                 <Img image={s.image} sizes="48px" className="mb-5 size-12 rounded-md object-cover shadow-soft" />
               ) : (
