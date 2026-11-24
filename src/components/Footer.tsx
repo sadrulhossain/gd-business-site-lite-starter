@@ -1,7 +1,8 @@
-import { getContent, SECTION_PAGES, type Section, type Settings } from '../lib/content'
+import { getContent, type Section, type Settings } from '../lib/content'
 import Link from 'next/link'
 import { contactMethods } from '../lib/contact'
 import { localePath, type Messages } from '../lib/i18n'
+import { navItems } from '../lib/nav'
 import { SiteLogo } from './SiteLogo'
 import { SocialIcon } from './SocialIcon'
 
@@ -10,8 +11,10 @@ const SOCIAL: Record<string, string> = { facebook: 'Facebook', instagram: 'Insta
 /** Dark footer: brand, contact with social links, important links and services, all from public settings. */
 export function Footer({ locale, settings, sections, messages }: { locale: string; settings: Settings; sections: Section[]; messages: Messages }) {
   const social = Object.entries(settings.social_links ?? {}).filter(([, url]) => url)
-  const methods = contactMethods(settings, messages.sections)
-  const pages = sections.filter((x) => x.key !== 'hero').map((x) => ({ key: x.key, title: x.title, href: localePath(locale, SECTION_PAGES[x.key] ?? `/${x.key}`) }))
+  // One number only: WhatsApp is shown when there is no phone link.
+  const all = contactMethods(settings, messages.sections)
+  const methods = all.filter((m) => m.key !== 'whatsapp' || !all.some((x) => x.key === 'call'))
+  const pages = navItems(locale, sections, messages, { contact: true })
   const services = getContent(locale).services.slice(0, 6)
   const heading = 'text-sm font-semibold tracking-widest text-accent-400 uppercase'
   const link = 'text-white/75 transition-colors hover:text-white'
@@ -68,7 +71,7 @@ export function Footer({ locale, settings, sections, messages }: { locale: strin
             {pages.map((x) => (
               <li key={x.key}>
                 <Link prefetch={false} href={x.href} className={link}>
-                  {x.title}
+                  {x.label}
                 </Link>
               </li>
             ))}

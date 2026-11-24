@@ -4,7 +4,18 @@
     "home": "হোম",
     "skip": "মূল অংশে যান",
     "contact": "যোগাযোগ",
-    "explore": "ঘুরে দেখুন"
+    "explore": "ঘুরে দেখুন",
+    "labels": {
+      "about": "আমাদের কথা",
+      "services": "সেবা",
+      "pricing": "মূল্য",
+      "testimonials": "মতামত",
+      "gallery": "গ্যালারি",
+      "faq": "প্রশ্নোত্তর",
+      "team": "টিম",
+      "contact": "যোগাযোগ",
+      "blog": "ব্লগ"
+    }
   },
   "language": {
     "label": "ভাষা"

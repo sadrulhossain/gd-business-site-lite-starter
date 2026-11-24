@@ -4,7 +4,18 @@
     "home": "Home",
     "skip": "Skip to content",
     "contact": "Contact",
-    "explore": "Explore"
+    "explore": "Explore",
+    "labels": {
+      "about": "About",
+      "services": "Services",
+      "pricing": "Pricing",
+      "testimonials": "Reviews",
+      "gallery": "Gallery",
+      "faq": "FAQ",
+      "team": "Team",
+      "contact": "Contact",
+      "blog": "Blog"
+    }
   },
   "language": {
     "label": "Language"
