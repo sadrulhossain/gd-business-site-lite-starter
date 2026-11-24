@@ -115,7 +115,7 @@ export const contact: Screen = {
     const mapUrl = mapHref(settings)
 
     return (
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 py-14 md:grid-cols-2">
+      <div className="mx-auto grid w-[92%] max-w-7xl gap-12 py-14 md:grid-cols-2">
         <div className="space-y-4">
           <h1 className="font-display text-4xl font-extrabold tracking-tight">{t.title}</h1>
           <p className="text-ink-muted">{t.intro}</p>

@@ -17,7 +17,7 @@ interface Ctx {
 
 type SectionView = (props: { section: Section } & Ctx) => ReactNode | Promise<ReactNode>
 
-const wrap = 'mx-auto max-w-6xl px-4 py-12 sm:py-16 lg:py-20'
+const wrap = 'mx-auto w-[92%] max-w-7xl py-12 sm:py-16 lg:py-20'
 const card = 'relative rounded-lg border border-line bg-surface p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift'
 const btnPrimary = 'inline-flex items-center justify-center rounded-full bg-brand-600 px-7 py-3.5 font-semibold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lift'
 
@@ -58,7 +58,6 @@ function Frame({ section, children, intro = true, page = false, dark = false, ti
 const Hero: SectionView = ({ section, locale, messages }) => {
   const sections = getContent(locale).sections
   const keys = sections.map((x) => x.key)
-  const aboutTitle = sections.find((x) => x.key === 'about')?.title
 
   return (
   <section id={section.key} aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-night text-white">
@@ -76,7 +75,7 @@ const Hero: SectionView = ({ section, locale, messages }) => {
         <div aria-hidden="true" className="pointer-events-none absolute -bottom-32 -start-24 -z-10 size-[22rem] rounded-full bg-accent-400/20 blur-3xl" />
       </>
     )}
-    <div className="mx-auto max-w-6xl px-4 py-20 sm:py-28 lg:py-36">
+    <div className="mx-auto w-[92%] max-w-7xl py-20 sm:py-28 lg:py-36">
       <div className="max-w-2xl space-y-6 text-center md:text-start">
         <h1 id="hero-title" className="font-display text-4xl leading-[1.08] font-extrabold tracking-tight text-balance text-white drop-shadow-sm sm:text-5xl lg:text-6xl">
           {section.title}
@@ -85,13 +84,13 @@ const Hero: SectionView = ({ section, locale, messages }) => {
         <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row md:justify-start">
           {keys.includes('contact') && (
             <Link prefetch={false} href={localePath(locale, '/contact')} className={heroPrimary}>
-              {messages.nav.contact}
+              {messages.sections.heroContact}
               <Arrow />
             </Link>
           )}
           {keys.includes('about') && (
             <Link prefetch={false} href={localePath(locale, '/about')} className={heroGhost}>
-              {aboutTitle ?? messages.sections.readMore}
+              {messages.sections.heroAbout}
             </Link>
           )}
         </div>

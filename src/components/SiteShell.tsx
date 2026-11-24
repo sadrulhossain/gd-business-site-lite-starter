@@ -37,7 +37,7 @@ export function SiteShell({ locale, children }: { locale: string; children: Reac
         <main id="main" className="flex-1">
           {children}
         </main>
-        <Footer locale={locale} settings={settings} messages={messages} />
+        <Footer locale={locale} settings={settings} sections={sections} messages={messages} />
       </body>
     </html>
   )

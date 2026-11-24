@@ -11,14 +11,15 @@
   },
   "footer": {
     "contact": "Contact",
-    "hours": "Opening hours",
     "follow": "Follow us",
     "closed": "Closed",
     "rights": "All rights reserved.",
     "poweredBy": "Powered by",
     "privacy": "Privacy policy",
     "terms": "Terms of use",
-    "legal": "Legal"
+    "legal": "Legal",
+    "links": "Important links",
+    "services": "Services"
   },
   "days": {
     "mon": "Monday",
@@ -41,7 +42,9 @@
     "seePricing": "See pricing",
     "popular": "Popular",
     "close": "Close",
-    "open": "View larger image"
+    "open": "View larger image",
+    "heroContact": "Get in touch with us today",
+    "heroAbout": "Learn more about our story"
   },
   "pages": {
     "about": "About us",
